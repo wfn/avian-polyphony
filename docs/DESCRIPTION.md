@@ -22,10 +22,16 @@ The soundscape is generated in real-time, not played from recordings.
     *   *Mating:* Complex melodic sequences when seeking a partner.
 *   **Spatial & Environmental Effects:** The audio engine applies reverb and delay to simulate the acoustics of a forest environment.
 
-### 3. AI-Powered Species Discovery
-By integrating with Google's Gemini API, the application offers a "Field Researcher" experience.
-*   **Specimen Analysis:** When a user selects a procedural bird, the system captures its unique traits (color, pitch, size, energy).
-*   **Generative Lore:** The AI invents a scientific name, common name, temperament, and field guide description for that specific generated bird, bridging the gap between abstract data and narrative.
+### 3. Procedural Species Nomenclature & Discovery
+The application offers a "Field Researcher" experience through procedural and AI-powered bird classification.
+*   **Local Procedural Generation (Default):** When a user selects a bird, the system analyzes its traits (color, pitch, size, energy, state) and generates:
+    *   **Scientific Names:** Latin binomial nomenclature with 25+ color families, 6 genus groups, and deterministic species epithets
+    *   **Common Names:** Mix of naturalist terms (Warbler, Thrush) and poetic descriptors (Dawn-Caller, Sky-Chime)
+    *   **Field Notes:** Contextual behavioral descriptions referencing actual bird properties
+    *   **Temperament:** Personality traits based on behavioral tendencies and current state
+    *   **Consistency:** Identical traits always produce identical species names (deterministic)
+*   **Optional AI Enhancement:** When Gemini API is available, can provide alternative LLM-generated descriptions
+*   **Specimen Analysis:** The system captures unique traits to bridge the gap between abstract data and narrative.
 
 ### 4. Interactive Controls
 The user can observe or intervene:

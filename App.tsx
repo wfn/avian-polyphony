@@ -703,12 +703,18 @@ function App() {
                             <div className="space-y-6 animate-fade-in">
                                 <div>
                                     <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Common Name</div>
-                                    <div className="text-2xl font-serif text-white">{analysis.speciesName}</div>
+                                    <div
+                                        className="text-2xl font-serif text-white"
+                                        dangerouslySetInnerHTML={{ __html: analysis.speciesName }}
+                                    />
                                 </div>
 
                                 <div>
                                     <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Scientific Classification</div>
-                                    <div className="text-sm italic text-green-300 font-mono">{analysis.scientificName}</div>
+                                    <div
+                                        className="text-sm italic text-green-300 font-mono"
+                                        dangerouslySetInnerHTML={{ __html: analysis.scientificName }}
+                                    />
                                 </div>
 
                                 <button 
@@ -753,16 +759,18 @@ function App() {
 
                                 <div>
                                     <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Field Notes</div>
-                                    <p className="text-sm text-gray-300 leading-relaxed border-l-2 border-green-500/30 pl-3">
-                                        {analysis.description}
-                                    </p>
+                                    <p
+                                        className="text-sm text-gray-300 leading-relaxed border-l-2 border-green-500/30 pl-3"
+                                        dangerouslySetInnerHTML={{ __html: analysis.description }}
+                                    />
                                 </div>
 
                                 <div>
                                     <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Temperament</div>
-                                    <div className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs border border-blue-500/30">
-                                        {analysis.temperament}
-                                    </div>
+                                    <div
+                                        className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs border border-blue-500/30"
+                                        dangerouslySetInnerHTML={{ __html: analysis.temperament }}
+                                    />
                                 </div>
                             </div>
                         )}

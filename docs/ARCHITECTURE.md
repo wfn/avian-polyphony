@@ -47,10 +47,23 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
 *   Exposes a simple `playCall(pitch, melody, type)` method that the Birds call.
 *   Uses a Singleton pattern to ensure only one AudioContext exists.
 
-#### `geminiService.ts`
-*   Stateless function export.
+#### `birdNomenclature.ts` (Local Species Generation)
+*   **Core nomenclature engine** - generates bird species names and descriptions locally without external dependencies.
+*   **Color Classification:** 25 distinct color families mapped from hex via HSL analysis (Crimson, Amber, Cobalt, etc.).
+*   **Genus System:** 6 behavioral genus groups (vocal, aerial, ground, temporal, social, speed) with 4 genera each.
+*   **Deterministic Generation:** Same bird traits always produce identical species names via hash-based selection.
+*   **Output Format:**
+    *   Scientific names: Latin binomial (e.g., "Melodius acutus-vigilans")
+    *   Common names: Pattern-based composition (e.g., "Sulfur Dawn-Caller", "Cobalt Warbler")
+    *   Field notes: 4 contextual templates referencing actual bird properties
+    *   Temperament: Behavior-based with energy/state modifiers
+*   **Visual Features:** Colored text rendering, fallback value indicators, integer-based deterministic hashing.
+
+#### `geminiService.ts` (Optional AI Enhancement)
+*   Stateless function export providing optional LLM-generated bird descriptions.
 *   Constructs a prompt based on the `BirdData` object.
 *   Calls `ai.models.generateContent` with a JSON schema to ensure structured output for the UI.
+*   **Graceful Fallback:** When API key is missing or calls fail, automatically falls back to `birdNomenclature.ts`.
 
 #### `PopulationChart.tsx`
 *   A pure SVG visualizer.
@@ -60,7 +73,7 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
 ## File Manifest
 
 | File | Responsibility |
-|Data | --- |
+| --- | --- |
 | `index.tsx` | Entry point. |
 | `App.tsx` | Main UI layout, state management, API integration. |
 | `constants.ts` | Simulation constants (Speed, World Size, Colors). |
@@ -73,7 +86,8 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
 | `components/PopulationChart.tsx` | SVG Data visualization. |
 | **Services** | |
 | `services/audioEngine.ts` | Tone.js synthesizer and effects chain. |
-| `services/geminiService.ts` | Google GenAI SDK implementation. |
+| `services/birdNomenclature.ts` | Local procedural bird species name/description generation. |
+| `services/geminiService.ts` | Optional Google GenAI SDK integration with fallback. |
 
 ## Data Flow
 1.  **Initialization:** `World` generates initial `BirdData[]` array.
