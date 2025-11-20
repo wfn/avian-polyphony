@@ -1,6 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# avian-polyphony
+
+## Quick intro
+
+> [!TIP]
+> See:
+
+[DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
+
+### Cute ridiculous bird "ecology" sandbox.
+
+Project can be maybe possibly used to further prototype ideas atop this as well as use as basis for exploring some half-simulation-half-flaky-aesthetics sandbox concepts; maybe.
+
+Initial repo (apart these notices here and there) is output of `gemini-3-pro-preview` model in AI Studio and really is just my wanting to play around with it; with vibe coding. There, I said it.
+
+# Warning
+
+> [!CAUTION]
+> "is output of `gemini-3-pro-preview` model in AI Studio" is not an exaggeration. Use **CAUTION, COMMON SENSE and DO NOT TRUST** code or docs in `DESCRIPTION` and `ARCHITECTURE`.
+
+# Docs
+
+See [`docs` directory](./docs/)
+
+# Screenshots
+
+adding resized images with relative paths here via separate commit made note through terminal i think
 
 # Run and deploy your AI Studio app
 
