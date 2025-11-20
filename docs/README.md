@@ -16,6 +16,8 @@ In other words, this is just a quick web app sandbox experiment using a nifty LL
    - LLM agent should be kindly asked to write/expand tests of multiple kinds
      - incl. some or other sort of end-to-end *useful* test suite
      - and then one could proudly add a reference to that here
+3. Docs for LLM
+   - [CLAUDE.md](../CLAUDE.md) - wrote initial version myself, it includes notes about direction I want to go (I think) as well
 
 ## Related
 
