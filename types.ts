@@ -36,10 +36,18 @@ export interface EvolutionSettings {
   foodAbundance: number;
 }
 
+export interface SpeciesParams {
+  color: string;
+  scale: number;
+  pitch: number;
+  name?: string;
+}
+
 export type WorldCommand = 
   | { type: 'ADD', count: number } 
   | { type: 'REMOVE', count: number } 
   | { type: 'SELECT_RANDOM' }
+  | { type: 'INTRODUCE_SPECIES', count: number, params: SpeciesParams }
   | null;
 
 export interface SimulationStats {

@@ -5,7 +5,7 @@ import { OrbitControls, Sky } from '@react-three/drei';
 import { Bird } from './Bird';
 import { Tree } from './Tree';
 import { Player } from './Player';
-import { BirdData, TreeData, BirdState, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand } from '../types';
+import { BirdData, TreeData, BirdState, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand, SpeciesParams } from '../types';
 import { BIRD_COUNT, TREE_COUNT, WORLD_SIZE, BIRD_COLORS, BASE_FREQ, PERCEPTION_RADIUS, INITIAL_ENERGY, MAX_ENERGY, METABOLIC_RATE, FORAGING_RATE, REPRODUCTION_THRESHOLD, REPRODUCTION_COST, MATURATION_AGE } from '../constants';
 import * as THREE from 'three';
 
@@ -87,6 +87,96 @@ const SceneContent: React.FC<WorldProps> = ({
     const [flockState, setFlockState] = useState<BirdData[]>([]);
     const flockRef = useRef<BirdData[]>([]);
     
+    // Helper to create a bird
+    // Now supports optional species traits for introduction
+    const createBird = (randomPos: boolean = true, parent?: BirdData, traits?: SpeciesParams): BirdData => {
+        const id = `bird-${uniqueIdCounter.current++}`;
+        
+        let position: [number, number, number];
+        let color = BIRD_COLORS[Math.floor(Math.random() * BIRD_COLORS.length)];
+        let melody = [1];
+        let pitch = BASE_FREQ + (Math.random() * 600);
+        let generation = 0;
+        let scale = 0.5 + Math.random() * 0.5;
+
+        if (parent) {
+            // Inherit with mutation
+            position = [
+                parent.position[0] + (Math.random() - 0.5) * 2,
+                parent.position[1],
+                parent.position[2] + (Math.random() - 0.5) * 2,
+            ];
+            
+            // Mutate color occasionally
+            if (Math.random() < evolutionSettings.mutationRate) {
+                 color = BIRD_COLORS[Math.floor(Math.random() * BIRD_COLORS.length)];
+            } else {
+                 color = parent.color;
+            }
+
+            // Mutate pitch
+            const mutation = (Math.random() - 0.5) * 100 * evolutionSettings.mutationRate;
+            pitch = parent.pitch + mutation;
+            
+            // Mutate scale
+            scale = parent.scale * (1 + (Math.random() - 0.5) * 0.2 * evolutionSettings.mutationRate);
+
+            // Mutate melody
+            melody = [...parent.melody];
+            if (Math.random() < evolutionSettings.mutationRate) {
+                const idx = Math.floor(Math.random() * melody.length);
+                melody[idx] = Math.max(1, melody[idx] + (Math.random() - 0.5) * 0.5);
+            }
+
+            generation = parent.generation + 1;
+
+        } else if (traits) {
+            // Introduced Species
+            const x = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
+            const y = 15 + Math.random() * 10; // Enter from high up
+            const z = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
+            position = [x, y, z];
+            
+            color = traits.color;
+            scale = traits.scale * (0.9 + Math.random() * 0.2); // Slight variation
+            pitch = traits.pitch * (0.95 + Math.random() * 0.1); // Slight variation
+            
+            // Generate a consistent but unique melody for this species base
+            const possibleIntervals = [1, 1.2, 1.25, 1.5, 1.8];
+            melody = [1];
+            for(let m=0; m<3; m++) {
+                melody.push(possibleIntervals[Math.floor(Math.random() * possibleIntervals.length)]);
+            }
+        } else {
+            // Random spawn (Default)
+             const x = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
+             const y = 5 + Math.random() * 10;
+             const z = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
+             position = [x, y, z];
+
+             const possibleIntervals = [1, 1.125, 1.25, 1.33, 1.5, 1.66, 1.875, 2];
+             for(let m=0; m<3; m++) {
+                melody.push(possibleIntervals[Math.floor(Math.random() * possibleIntervals.length)]);
+             }
+        }
+
+        return {
+            id,
+            position,
+            velocity: [(Math.random()-0.5)*0.1, 0, (Math.random()-0.5)*0.1],
+            color,
+            state: BirdState.FLYING,
+            scale,
+            pitch,
+            melody,
+            lastChirp: 0,
+            age: 0,
+            maxAge: (60 + Math.random() * 120), // 1-3 minutes lifespan
+            energy: INITIAL_ENERGY,
+            generation
+        };
+    };
+
     // Handle manual world commands (Population / Selection)
     useEffect(() => {
         if (!worldCommand) return;
@@ -109,6 +199,11 @@ const SceneContent: React.FC<WorldProps> = ({
                  const randomBird = updatedFlock[Math.floor(Math.random() * updatedFlock.length)];
                  onBirdSelect(randomBird);
              }
+        } else if (worldCommand.type === 'INTRODUCE_SPECIES') {
+             for (let i = 0; i < worldCommand.count; i++) {
+                updatedFlock.push(createBird(true, undefined, worldCommand.params));
+             }
+             needsUpdate = true;
         }
 
         if (needsUpdate) {
@@ -117,74 +212,6 @@ const SceneContent: React.FC<WorldProps> = ({
         }
 
     }, [worldCommand]);
-
-    // Helper to create a bird
-    const createBird = (randomPos: boolean = true, parent?: BirdData): BirdData => {
-        const id = `bird-${uniqueIdCounter.current++}`;
-        
-        let position: [number, number, number];
-        let color = BIRD_COLORS[Math.floor(Math.random() * BIRD_COLORS.length)];
-        let melody = [1];
-        let pitch = BASE_FREQ + (Math.random() * 600);
-        let generation = 0;
-
-        if (parent) {
-            // Inherit with mutation
-            position = [
-                parent.position[0] + (Math.random() - 0.5) * 2,
-                parent.position[1],
-                parent.position[2] + (Math.random() - 0.5) * 2,
-            ];
-            
-            // Mutate color occasionally
-            if (Math.random() < evolutionSettings.mutationRate) {
-                 color = BIRD_COLORS[Math.floor(Math.random() * BIRD_COLORS.length)];
-            } else {
-                 color = parent.color;
-            }
-
-            // Mutate pitch
-            const mutation = (Math.random() - 0.5) * 100 * evolutionSettings.mutationRate;
-            pitch = parent.pitch + mutation;
-
-            // Mutate melody
-            melody = [...parent.melody];
-            if (Math.random() < evolutionSettings.mutationRate) {
-                const idx = Math.floor(Math.random() * melody.length);
-                melody[idx] = Math.max(1, melody[idx] + (Math.random() - 0.5) * 0.5);
-            }
-
-            generation = parent.generation + 1;
-
-        } else {
-            // Random spawn
-             const x = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
-             const y = 5 + Math.random() * 10;
-             const z = (Math.random() - 0.5) * (WORLD_SIZE * 0.8);
-             position = [x, y, z];
-
-             const possibleIntervals = [1, 1.125, 1.25, 1.33, 1.5, 1.66, 1.875, 2];
-             for(let m=0; m<3; m++) {
-                melody.push(possibleIntervals[Math.floor(Math.random() * possibleIntervals.length)]);
-             }
-        }
-
-        return {
-            id,
-            position,
-            velocity: [(Math.random()-0.5)*0.1, 0, (Math.random()-0.5)*0.1],
-            color,
-            state: BirdState.FLYING,
-            scale: 0.5 + Math.random() * 0.5,
-            pitch,
-            melody,
-            lastChirp: 0,
-            age: 0,
-            maxAge: (60 + Math.random() * 120), // 1-3 minutes lifespan
-            energy: INITIAL_ENERGY,
-            generation
-        };
-    };
 
     // Initialize Fog, Lighting, and Initial Flock
     useEffect(() => {

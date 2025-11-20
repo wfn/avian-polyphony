@@ -4,7 +4,7 @@ import { World } from './components/World';
 import { audioEngine } from './services/audioEngine';
 import { analyzeBird } from './services/geminiService';
 import { BirdData, BirdAnalysis, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand } from './types';
-import { Volume2, VolumeX, Info, X, Music, Bird as BirdIcon, Sparkles, Cookie, Megaphone, Eye, Globe, Video, Shuffle, SlidersHorizontal, Wind, Play, Pause, Activity, Users, Mic, Mountain, Dna, Zap, Timer, Sprout, Plus, Minus } from 'lucide-react';
+import { Volume2, VolumeX, Info, X, Music, Bird as BirdIcon, Sparkles, Cookie, Megaphone, Eye, Globe, Video, Shuffle, SlidersHorizontal, Wind, Play, Pause, Activity, Users, Mic, Mountain, Dna, Zap, Timer, Sprout, Plus, Minus, TestTube, Settings2, Palette, Signal } from 'lucide-react';
 
 function App() {
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -14,8 +14,12 @@ function App() {
   const [analysis, setAnalysis] = useState<BirdAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.ORBIT);
+  
+  // UI Panels
   const [showSettings, setShowSettings] = useState(false);
   const [showEvolution, setShowEvolution] = useState(false);
+  const [showSpeciesPanel, setShowSpeciesPanel] = useState(false);
+
   const [simSettings, setSimSettings] = useState<SimSettings>({ 
       speed: 1, 
       agility: 1,
@@ -27,6 +31,14 @@ function App() {
       mutationRate: 0.1,
       foodAbundance: 1.0
   });
+  
+  // New Species creation state
+  const [customSpecies, setCustomSpecies] = useState({
+      color: '#ff8800',
+      scale: 1.0,
+      pitch: 500
+  });
+
   const [worldCommand, setWorldCommand] = useState<WorldCommand>(null);
   const [isPaused, setIsPaused] = useState(false);
   
@@ -107,6 +119,35 @@ function App() {
 
   const handlePopulationChange = (type: 'ADD' | 'REMOVE') => {
     setWorldCommand({ type, count: 1 });
+  };
+
+  const triggerMigration = () => {
+    // Generate random traits
+    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    const randomScale = 0.3 + Math.random() * 1.2;
+    const randomPitch = 200 + Math.random() * 1000;
+    
+    setWorldCommand({
+        type: 'INTRODUCE_SPECIES',
+        count: 5,
+        params: {
+            color: randomColor,
+            scale: randomScale,
+            pitch: randomPitch
+        }
+    });
+  };
+
+  const introduceCustomSpecies = () => {
+      setWorldCommand({
+          type: 'INTRODUCE_SPECIES',
+          count: 5,
+          params: {
+              color: customSpecies.color,
+              scale: customSpecies.scale,
+              pitch: customSpecies.pitch
+          }
+      });
   };
 
   return (
@@ -209,7 +250,7 @@ function App() {
                      <div className="w-px bg-white/10 mx-1"></div>
 
                      <button
-                        onClick={() => { setShowSettings(!showSettings); setShowEvolution(false); }}
+                        onClick={() => { setShowSettings(!showSettings); setShowEvolution(false); setShowSpeciesPanel(false); }}
                         className={`p-2 rounded-full transition-colors ${showSettings ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-white/60'}`}
                         title="Flight Settings"
                      >
@@ -217,11 +258,19 @@ function App() {
                      </button>
                      
                      <button
-                        onClick={() => { setShowEvolution(!showEvolution); setShowSettings(false); }}
+                        onClick={() => { setShowEvolution(!showEvolution); setShowSettings(false); setShowSpeciesPanel(false); }}
                         className={`p-2 rounded-full transition-colors ${showEvolution ? 'bg-pink-500/20 text-pink-300' : 'hover:bg-white/10 text-white/60'}`}
                         title="Evolution Controls"
                      >
                         <Dna size={20} />
+                     </button>
+                     
+                     <button
+                        onClick={() => { setShowSpeciesPanel(!showSpeciesPanel); setShowSettings(false); setShowEvolution(false); }}
+                        className={`p-2 rounded-full transition-colors ${showSpeciesPanel ? 'bg-blue-500/20 text-blue-300' : 'hover:bg-white/10 text-white/60'}`}
+                        title="Introduce Species"
+                     >
+                        <TestTube size={20} />
                      </button>
 
                      <div className="w-px bg-white/10 mx-1"></div>
@@ -389,6 +438,88 @@ function App() {
                             </div>
                         </div>
                     </div>
+                  )}
+
+                  {/* Species Discovery Panel */}
+                  {showSpeciesPanel && (
+                      <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-blue-500/20 text-white/80 shadow-xl w-72 animate-fade-in-down">
+                           <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
+                                <TestTube size={14} className="text-blue-400"/> Species Discovery
+                           </h3>
+                           
+                           <div className="mb-5">
+                               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2 flex items-center gap-1">
+                                   <Globe size={10}/> Procedural Migration
+                               </div>
+                               <p className="text-xs text-gray-400 mb-2 leading-tight">
+                                   Simulate a flock of unknown species migrating into the region.
+                               </p>
+                               <button 
+                                   onClick={triggerMigration}
+                                   className="w-full py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                               >
+                                   <Wind size={14}/> Trigger Migration
+                               </button>
+                           </div>
+
+                           <div className="border-t border-white/10 pt-4">
+                               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-3 flex items-center gap-1">
+                                   <Settings2 size={10}/> Genetic Engineering
+                               </div>
+                               
+                               <div className="space-y-3">
+                                   <div className="flex items-center justify-between">
+                                       <span className="text-xs flex items-center gap-2"><Palette size={12}/> Plumage</span>
+                                       <div className="relative w-8 h-6 overflow-hidden rounded cursor-pointer ring-1 ring-white/20">
+                                           <input 
+                                                type="color" 
+                                                value={customSpecies.color}
+                                                onChange={(e) => setCustomSpecies(s => ({...s, color: e.target.value}))}
+                                                className="absolute -top-2 -left-2 w-16 h-16 cursor-pointer p-0 border-0"
+                                           />
+                                       </div>
+                                   </div>
+
+                                   <div>
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span>Body Scale</span>
+                                            <span className="font-mono text-white/60">{customSpecies.scale.toFixed(1)}x</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="0.3" max="2.0" step="0.1"
+                                            value={customSpecies.scale}
+                                            onChange={(e) => setCustomSpecies(s => ({...s, scale: parseFloat(e.target.value)}))}
+                                            className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                                        />
+                                   </div>
+
+                                   <div>
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span className="flex items-center gap-1"><Signal size={10}/> Pitch</span>
+                                            <span className="font-mono text-white/60">{Math.round(customSpecies.pitch)}Hz</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="200" max="1200" step="50"
+                                            value={customSpecies.pitch}
+                                            onChange={(e) => setCustomSpecies(s => ({...s, pitch: parseFloat(e.target.value)}))}
+                                            className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                                        />
+                                        <div className="flex justify-between text-[9px] text-gray-500 mt-1 font-mono uppercase">
+                                            <span>Bass</span>
+                                            <span>Tenor</span>
+                                            <span>Soprano</span>
+                                        </div>
+                                   </div>
+                                   
+                                   <button 
+                                       onClick={introduceCustomSpecies}
+                                       className="w-full mt-2 py-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                                   >
+                                       <TestTube size={14}/> Synthesize & Release
+                                   </button>
+                               </div>
+                           </div>
+                      </div>
                   )}
                 </div>
             </div>
