@@ -3,7 +3,9 @@
 ## Quick intro
 
 > [!TIP]
-> See: [README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md); [possible roadmap analysis / future directions](./docs/FUTURE_WORK.md)
+> See: [README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
+>
+> **Planning:** [Future Work Analysis](./docs/FUTURE_WORK.md) | [Visual Development Roadmap](./docs/DEVELOPMENT_ROADMAP.md)
 
 ### Cute ridiculous bird "ecology" sandbox.
 

@@ -18,7 +18,9 @@ In other words, this is just a quick web app sandbox experiment using a nifty LL
      - and then one could proudly add a reference to that here
 3. **Docs for LLM**
    - [CLAUDE.md](../CLAUDE.md) - wrote initial version myself, it includes notes about direction I want to go (I think) as well
-4. Possible **Roadmap** analysis / possible future areas to explore: [FUTURE_WORK](FUTURE_WORK.md)
+4. **Roadmap & Planning**
+   - [FUTURE_WORK](FUTURE_WORK.md) - Comprehensive analysis of possible future areas to explore (11 domains)
+   - [DEVELOPMENT_ROADMAP](DEVELOPMENT_ROADMAP.md) - **Visual guide**: Prioritized sequence with Mermaid diagrams, phase details, and daily reference
 
 ## Related
 
