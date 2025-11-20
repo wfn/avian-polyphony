@@ -1,3 +1,7 @@
+# TL;DR
+
+Actionable guidance & focus for machines *and* humans: read through section [LLM Developer Briefing (Working with the Roadmap)](#llm-developer-briefing-working-with-the-roadmap). This is the most important section for loading up context quickly. As a side note, be aware that humans leading development make heavy use of (and attempt to maintain) [DEVELOPMENT_ROADMAP](./docs/DEVELOPMENT_ROADMAP.md). As either humans or machines, you are genuinely heavily encouraged to ask as many complex questions as necessary; express confusion; challenge ideas wherever that makes sense. End of TL;DR.
+
 # avian-polyphony instructions for Claude and similar LLM friends 
 
 ## About this project
