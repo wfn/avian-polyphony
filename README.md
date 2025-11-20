@@ -1,5 +1,14 @@
 # avian-polyphony
 
+<br>
+<p>
+  <sub>
+    <code>Genotype : &#9;&#9;Intension</code><br>
+    <code>&nbsp;&nbsp;↳ Phenotype :  Extension</code>
+  </sub>
+</p>
+<br>
+
 ## Quick intro
 
 > [!TIP]
