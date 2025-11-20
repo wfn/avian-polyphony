@@ -21,11 +21,13 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
 ### 2. Component Structure
 *   **`App.tsx` (Orchestrator):**
     *   Holds global UI state (Settings, View Mode, Selected Bird).
+    *   **UI Layout Engine:** Handles the "Dashboard Mode" toggle, switching between floating popovers and a consolidated sidebar layout for controls.
     *   Manages the connection to `audioEngine` and `geminiService`.
     *   Renders the 2D UI overlays (Stats, Settings Panels, Charts).
     *   Contains the `Canvas` (via `World` wrapper).
 *   **`World.tsx` (Simulation Container):**
     *   Manages the `flock` array (the source of truth for the simulation).
+    *   **`FlockVisualizer`:** A dedicated sub-component that renders the flocking network. It uses `THREE.LineSegments` with a pre-allocated geometry buffer for high-performance rendering of dynamic connections between birds.
     *   Handles the **Evolution Loop** (Aging, Birth, Death, Energy calculation).
     *   Calculates global stats (Population, Flock counts) periodically.
     *   Renders the environment (Sky, Light, Trees).
@@ -35,6 +37,7 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
     *   **State Machine:** Switches between Flying, Foraging, Singing, Idle.
     *   **Audio Trigger:** Calls `audioEngine.playCall()` based on probabilistic timers.
     *   **Visuals:** Updates mesh position, rotation, and "singing ring" visualizers.
+    *   **Trail Rendering:** Uses `@react-three/drei`'s `Trail` component to visualize movement history and energy levels.
 
 ### 3. Services
 
@@ -63,8 +66,8 @@ To maintain 60 FPS with dozens of autonomous agents, the application separates R
 | `constants.ts` | Simulation constants (Speed, World Size, Colors). |
 | `types.ts` | TypeScript interfaces (`BirdData`, `SimSettings`, Enums). |
 | **Components** | |
-| `components/World.tsx` | 3D Scene setup, Evolution loop, Camera Logic. |
-| `components/Bird.tsx` | Boids physics, Agent behavior, Audio triggers. |
+| `components/World.tsx` | 3D Scene setup, Evolution loop, Camera Logic, Flock Visualizer. |
+| `components/Bird.tsx` | Boids physics, Agent behavior, Audio triggers, Trail. |
 | `components/Tree.tsx` | Static environmental assets. |
 | `components/Player.tsx` | First-person control logic (PointerLock). |
 | `components/PopulationChart.tsx` | SVG Data visualization. |

@@ -27,6 +27,7 @@ export interface SimSettings {
   speed: number;
   agility: number;
   renderDistance: number;
+  showFlocking: boolean;
 }
 
 export interface EvolutionSettings {

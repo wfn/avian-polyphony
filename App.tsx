@@ -5,7 +5,262 @@ import { audioEngine } from './services/audioEngine';
 import { analyzeBird } from './services/geminiService';
 import { PopulationChart } from './components/PopulationChart';
 import { BirdData, BirdAnalysis, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand, HistoryPoint } from './types';
-import { Volume2, VolumeX, Info, X, Music, Bird as BirdIcon, Sparkles, Cookie, Megaphone, Eye, Globe, Video, Shuffle, SlidersHorizontal, Wind, Play, Pause, Activity, Users, Mic, Mountain, Dna, Zap, Timer, Sprout, Plus, Minus, TestTube, Settings2, Palette, Signal } from 'lucide-react';
+import { Volume2, VolumeX, Info, X, Music, Bird as BirdIcon, Sparkles, Cookie, Megaphone, Eye, Globe, Video, Shuffle, SlidersHorizontal, Wind, Play, Pause, Activity, Users, Mic, Mountain, Dna, Zap, Timer, Sprout, Plus, Minus, TestTube, Settings2, Palette, Signal, LayoutDashboard, Network } from 'lucide-react';
+
+// --- Reusable Panel Components ---
+
+interface FlightPanelProps {
+  settings: SimSettings;
+  setSettings: React.Dispatch<React.SetStateAction<SimSettings>>;
+}
+const FlightPanel: React.FC<FlightPanelProps> = ({ settings, setSettings }) => (
+  <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white/80 shadow-xl w-64 animate-fade-in-down">
+      <h3 className="font-bold text-white mb-3 flex items-center gap-2 text-xs uppercase tracking-wider">
+          <Wind size={14} /> Flight Parameters
+      </h3>
+      
+      <div className="mb-4">
+          <div className="flex justify-between text-xs mb-1">
+              <span>Velocity</span>
+              <span className="text-green-400 font-mono">{settings.speed.toFixed(2)}x</span>
+          </div>
+          <input 
+              type="range" 
+              min="0.05" 
+              max="3.0" 
+              step="0.05"
+              value={settings.speed}
+              onChange={(e) => setSettings(s => ({...s, speed: parseFloat(e.target.value)}))}
+              className="w-full accent-green-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+          />
+      </div>
+
+      <div className="mb-4">
+          <div className="flex justify-between text-xs mb-1">
+              <span>Agility</span>
+              <span className="text-blue-400 font-mono">{settings.agility.toFixed(2)}x</span>
+          </div>
+          <input 
+              type="range" 
+              min="0.05" 
+              max="3.0" 
+              step="0.05"
+              value={settings.agility}
+              onChange={(e) => setSettings(s => ({...s, agility: parseFloat(e.target.value)}))}
+              className="w-full accent-blue-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+          />
+      </div>
+
+      <div className="mb-4">
+          <div className="flex justify-between text-xs mb-1">
+              <span>Visibility</span>
+              <span className="text-purple-400 font-mono">{settings.renderDistance.toFixed(0)}m</span>
+          </div>
+          <input 
+              type="range" 
+              min="50" 
+              max="500" 
+              step="10"
+              value={settings.renderDistance}
+              onChange={(e) => setSettings(s => ({...s, renderDistance: parseFloat(e.target.value)}))}
+              className="w-full accent-purple-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+          />
+      </div>
+
+      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+          <div className="text-xs flex items-center gap-2">
+             <Network size={12} />
+             <span>Flocking Network</span>
+          </div>
+          <button 
+              onClick={() => setSettings(s => ({...s, showFlocking: !s.showFlocking}))}
+              className={`w-8 h-4 rounded-full p-0.5 transition-colors ${settings.showFlocking ? 'bg-blue-500' : 'bg-white/20'}`}
+          >
+              <div className={`w-3 h-3 bg-white rounded-full shadow-md transform transition-transform ${settings.showFlocking ? 'translate-x-4' : 'translate-x-0'}`} />
+          </button>
+      </div>
+  </div>
+);
+
+interface EvolutionPanelProps {
+  settings: EvolutionSettings;
+  setSettings: React.Dispatch<React.SetStateAction<EvolutionSettings>>;
+  stats: SimulationStats;
+  onPopChange: (type: 'ADD' | 'REMOVE') => void;
+}
+const EvolutionPanel: React.FC<EvolutionPanelProps> = ({ settings, setSettings, stats, onPopChange }) => (
+  <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-pink-500/20 text-white/80 shadow-xl w-72 animate-fade-in-down">
+      <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold text-white flex items-center gap-2 text-xs uppercase tracking-wider">
+              <Dna size={14} className="text-pink-400"/> Evolution Logic
+          </h3>
+          <button 
+              onClick={() => setSettings(s => ({...s, enabled: !s.enabled}))}
+              className={`w-10 h-5 rounded-full p-1 transition-colors ${settings.enabled ? 'bg-pink-500' : 'bg-white/20'}`}
+          >
+              <div className={`w-3 h-3 bg-white rounded-full shadow-md transform transition-transform ${settings.enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+          </button>
+      </div>
+
+      {/* Manual Population Control */}
+      <div className="mb-4 pb-4 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">Population Control</div>
+            <div className="flex items-center justify-between bg-white/5 rounded-lg p-1">
+                <button 
+                  onClick={() => onPopChange('REMOVE')}
+                  className="p-2 hover:bg-red-500/20 text-red-300 rounded-md transition-colors"
+                >
+                    <Minus size={16} />
+                </button>
+                <span className="font-mono font-bold text-white">{stats.population}</span>
+                <button 
+                    onClick={() => onPopChange('ADD')}
+                    className="p-2 hover:bg-green-500/20 text-green-300 rounded-md transition-colors"
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
+      </div>
+      
+      <div className={`space-y-4 transition-opacity ${settings.enabled ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
+          <div>
+              <div className="flex justify-between text-xs mb-1">
+                  <span className="flex items-center gap-1"><Timer size={10}/> Life Speed (Aging)</span>
+                  <span className="text-pink-300 font-mono">{settings.agingSpeed.toFixed(1)}x</span>
+              </div>
+              <input 
+                  type="range" 
+                  min="0.1" 
+                  max="5.0" 
+                  step="0.1"
+                  value={settings.agingSpeed}
+                  onChange={(e) => setSettings(s => ({...s, agingSpeed: parseFloat(e.target.value)}))}
+                  className="w-full accent-pink-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+              />
+          </div>
+
+          <div>
+              <div className="flex justify-between text-xs mb-1">
+                  <span className="flex items-center gap-1"><Zap size={10}/> Mutation Rate</span>
+                  <span className="text-yellow-300 font-mono">{(settings.mutationRate * 100).toFixed(0)}%</span>
+              </div>
+              <input 
+                  type="range" 
+                  min="0" 
+                  max="1.0" 
+                  step="0.05"
+                  value={settings.mutationRate}
+                  onChange={(e) => setSettings(s => ({...s, mutationRate: parseFloat(e.target.value)}))}
+                  className="w-full accent-yellow-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+              />
+          </div>
+          
+          <div>
+              <div className="flex justify-between text-xs mb-1">
+                  <span className="flex items-center gap-1"><Sprout size={10}/> Food Abundance</span>
+                  <span className="text-green-300 font-mono">{settings.foodAbundance.toFixed(1)}x</span>
+              </div>
+              <input 
+                  type="range" 
+                  min="0.1" 
+                  max="3.0" 
+                  step="0.1"
+                  value={settings.foodAbundance}
+                  onChange={(e) => setSettings(s => ({...s, foodAbundance: parseFloat(e.target.value)}))}
+                  className="w-full accent-green-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+              />
+          </div>
+      </div>
+  </div>
+);
+
+interface SpeciesPanelProps {
+  customSpecies: { color: string; scale: number; pitch: number };
+  setCustomSpecies: React.Dispatch<React.SetStateAction<{ color: string; scale: number; pitch: number }>>;
+  onMigrate: () => void;
+  onIntroduce: () => void;
+}
+const SpeciesPanel: React.FC<SpeciesPanelProps> = ({ customSpecies, setCustomSpecies, onMigrate, onIntroduce }) => (
+  <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-blue-500/20 text-white/80 shadow-xl w-72 animate-fade-in-down">
+        <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
+            <TestTube size={14} className="text-blue-400"/> Species Discovery
+        </h3>
+        
+        <div className="mb-5">
+            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2 flex items-center gap-1">
+                <Globe size={10}/> Procedural Migration
+            </div>
+            <p className="text-xs text-gray-400 mb-2 leading-tight">
+                Simulate a flock of unknown species migrating into the region.
+            </p>
+            <button 
+                onClick={onMigrate}
+                className="w-full py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+            >
+                <Wind size={14}/> Trigger Migration
+            </button>
+        </div>
+
+        <div className="border-t border-white/10 pt-4">
+            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-3 flex items-center gap-1">
+                <Settings2 size={10}/> Genetic Engineering
+            </div>
+            
+            <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                    <span className="text-xs flex items-center gap-2"><Palette size={12}/> Plumage</span>
+                    <div className="relative w-8 h-6 overflow-hidden rounded cursor-pointer ring-1 ring-white/20">
+                        <input 
+                              type="color" 
+                              value={customSpecies.color}
+                              onChange={(e) => setCustomSpecies(s => ({...s, color: e.target.value}))}
+                              className="absolute -top-2 -left-2 w-16 h-16 cursor-pointer p-0 border-0"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                      <div className="flex justify-between text-xs mb-1">
+                          <span>Body Scale</span>
+                          <span className="font-mono text-white/60">{customSpecies.scale.toFixed(1)}x</span>
+                      </div>
+                      <input 
+                          type="range" min="0.3" max="2.0" step="0.1"
+                          value={customSpecies.scale}
+                          onChange={(e) => setCustomSpecies(s => ({...s, scale: parseFloat(e.target.value)}))}
+                          className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                      />
+                </div>
+
+                <div>
+                      <div className="flex justify-between text-xs mb-1">
+                          <span className="flex items-center gap-1"><Signal size={10}/> Pitch</span>
+                          <span className="font-mono text-white/60">{Math.round(customSpecies.pitch)}Hz</span>
+                      </div>
+                      <input 
+                          type="range" min="200" max="1200" step="50"
+                          value={customSpecies.pitch}
+                          onChange={(e) => setCustomSpecies(s => ({...s, pitch: parseFloat(e.target.value)}))}
+                          className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <div className="flex justify-between text-[9px] text-gray-500 mt-1 font-mono uppercase">
+                          <span>Bass</span>
+                          <span>Tenor</span>
+                          <span>Soprano</span>
+                      </div>
+                </div>
+                
+                <button 
+                    onClick={onIntroduce}
+                    className="w-full mt-2 py-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                >
+                    <TestTube size={14}/> Synthesize & Release
+                </button>
+            </div>
+        </div>
+  </div>
+);
+
 
 function App() {
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -17,6 +272,7 @@ function App() {
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.ORBIT);
   
   // UI Panels
+  const [dashboardMode, setDashboardMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showEvolution, setShowEvolution] = useState(false);
   const [showSpeciesPanel, setShowSpeciesPanel] = useState(false);
@@ -24,7 +280,8 @@ function App() {
   const [simSettings, setSimSettings] = useState<SimSettings>({ 
       speed: 1, 
       agility: 1,
-      renderDistance: 150 
+      renderDistance: 150,
+      showFlocking: false
   });
   const [evolutionSettings, setEvolutionSettings] = useState<EvolutionSettings>({ 
       enabled: false, 
@@ -271,24 +528,37 @@ function App() {
                      <div className="w-px bg-white/10 mx-1"></div>
 
                      <button
+                        onClick={() => setDashboardMode(!dashboardMode)}
+                        className={`p-2 rounded-full transition-colors ${dashboardMode ? 'bg-indigo-500/20 text-indigo-300' : 'hover:bg-white/10 text-white/60'}`}
+                        title="Dashboard Mode (Show All UI)"
+                     >
+                        <LayoutDashboard size={20} />
+                     </button>
+
+                     <div className="w-px bg-white/10 mx-1"></div>
+
+                     <button
+                        disabled={dashboardMode}
                         onClick={() => { setShowSettings(!showSettings); setShowEvolution(false); setShowSpeciesPanel(false); }}
-                        className={`p-2 rounded-full transition-colors ${showSettings ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-white/60'}`}
+                        className={`p-2 rounded-full transition-colors ${showSettings && !dashboardMode ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-white/60'} ${dashboardMode ? 'opacity-30 cursor-not-allowed' : ''}`}
                         title="Flight Settings"
                      >
                         <SlidersHorizontal size={20} />
                      </button>
                      
                      <button
+                        disabled={dashboardMode}
                         onClick={() => { setShowEvolution(!showEvolution); setShowSettings(false); setShowSpeciesPanel(false); }}
-                        className={`p-2 rounded-full transition-colors ${showEvolution ? 'bg-pink-500/20 text-pink-300' : 'hover:bg-white/10 text-white/60'}`}
+                        className={`p-2 rounded-full transition-colors ${showEvolution && !dashboardMode ? 'bg-pink-500/20 text-pink-300' : 'hover:bg-white/10 text-white/60'} ${dashboardMode ? 'opacity-30 cursor-not-allowed' : ''}`}
                         title="Evolution Controls"
                      >
                         <Dna size={20} />
                      </button>
                      
                      <button
+                        disabled={dashboardMode}
                         onClick={() => { setShowSpeciesPanel(!showSpeciesPanel); setShowSettings(false); setShowEvolution(false); }}
-                        className={`p-2 rounded-full transition-colors ${showSpeciesPanel ? 'bg-blue-500/20 text-blue-300' : 'hover:bg-white/10 text-white/60'}`}
+                        className={`p-2 rounded-full transition-colors ${showSpeciesPanel && !dashboardMode ? 'bg-blue-500/20 text-blue-300' : 'hover:bg-white/10 text-white/60'} ${dashboardMode ? 'opacity-30 cursor-not-allowed' : ''}`}
                         title="Introduce Species"
                      >
                         <TestTube size={20} />
@@ -317,230 +587,30 @@ function App() {
                      </button>
                   </div>
 
-                  {/* Flight Settings Panel */}
-                  {showSettings && (
-                    <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white/80 shadow-xl w-64 animate-fade-in-down">
-                        <h3 className="font-bold text-white mb-3 flex items-center gap-2 text-xs uppercase tracking-wider">
-                            <Wind size={14} /> Flight Parameters
-                        </h3>
-                        
-                        <div className="mb-4">
-                            <div className="flex justify-between text-xs mb-1">
-                                <span>Velocity</span>
-                                <span className="text-green-400 font-mono">{simSettings.speed.toFixed(2)}x</span>
-                            </div>
-                            <input 
-                                type="range" 
-                                min="0.05" 
-                                max="3.0" 
-                                step="0.05"
-                                value={simSettings.speed}
-                                onChange={(e) => setSimSettings(s => ({...s, speed: parseFloat(e.target.value)}))}
-                                className="w-full accent-green-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            <div className="flex justify-between text-xs mb-1">
-                                <span>Agility</span>
-                                <span className="text-blue-400 font-mono">{simSettings.agility.toFixed(2)}x</span>
-                            </div>
-                            <input 
-                                type="range" 
-                                min="0.05" 
-                                max="3.0" 
-                                step="0.05"
-                                value={simSettings.agility}
-                                onChange={(e) => setSimSettings(s => ({...s, agility: parseFloat(e.target.value)}))}
-                                className="w-full accent-blue-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between text-xs mb-1">
-                                <span>Visibility</span>
-                                <span className="text-purple-400 font-mono">{simSettings.renderDistance.toFixed(0)}m</span>
-                            </div>
-                            <input 
-                                type="range" 
-                                min="50" 
-                                max="500" 
-                                step="10"
-                                value={simSettings.renderDistance}
-                                onChange={(e) => setSimSettings(s => ({...s, renderDistance: parseFloat(e.target.value)}))}
-                                className="w-full accent-purple-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-                    </div>
+                  {/* Dashboard Mode: Render all panels in a sidebar stack */}
+                  {dashboardMode && (
+                      <div className="absolute top-20 right-0 flex flex-col gap-4 pointer-events-auto z-30 pr-1 max-h-[calc(100vh-150px)] overflow-y-auto scrollbar-hide">
+                          <FlightPanel settings={simSettings} setSettings={setSimSettings} />
+                          <EvolutionPanel settings={evolutionSettings} setSettings={setEvolutionSettings} stats={stats} onPopChange={handlePopulationChange} />
+                          <SpeciesPanel customSpecies={customSpecies} setCustomSpecies={setCustomSpecies} onMigrate={triggerMigration} onIntroduce={introduceCustomSpecies} />
+                      </div>
                   )}
                   
-                  {/* Evolution Settings Panel */}
-                  {showEvolution && (
-                    <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-pink-500/20 text-white/80 shadow-xl w-72 animate-fade-in-down">
-                        <div className="flex justify-between items-center mb-3">
-                             <h3 className="font-bold text-white flex items-center gap-2 text-xs uppercase tracking-wider">
-                                <Dna size={14} className="text-pink-400"/> Evolution Logic
-                            </h3>
-                            <button 
-                                onClick={() => setEvolutionSettings(s => ({...s, enabled: !s.enabled}))}
-                                className={`w-10 h-5 rounded-full p-1 transition-colors ${evolutionSettings.enabled ? 'bg-pink-500' : 'bg-white/20'}`}
-                            >
-                                <div className={`w-3 h-3 bg-white rounded-full shadow-md transform transition-transform ${evolutionSettings.enabled ? 'translate-x-5' : 'translate-x-0'}`} />
-                            </button>
-                        </div>
-
-                        {/* Manual Population Control */}
-                        <div className="mb-4 pb-4 border-b border-white/10">
-                             <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">Population Control</div>
-                             <div className="flex items-center justify-between bg-white/5 rounded-lg p-1">
-                                 <button 
-                                    onClick={() => handlePopulationChange('REMOVE')}
-                                    className="p-2 hover:bg-red-500/20 text-red-300 rounded-md transition-colors"
-                                 >
-                                     <Minus size={16} />
-                                 </button>
-                                 <span className="font-mono font-bold text-white">{stats.population}</span>
-                                 <button 
-                                     onClick={() => handlePopulationChange('ADD')}
-                                     className="p-2 hover:bg-green-500/20 text-green-300 rounded-md transition-colors"
-                                 >
-                                     <Plus size={16} />
-                                 </button>
-                             </div>
-                        </div>
-                        
-                        <div className={`space-y-4 transition-opacity ${evolutionSettings.enabled ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
-                            <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="flex items-center gap-1"><Timer size={10}/> Life Speed (Aging)</span>
-                                    <span className="text-pink-300 font-mono">{evolutionSettings.agingSpeed.toFixed(1)}x</span>
-                                </div>
-                                <input 
-                                    type="range" 
-                                    min="0.1" 
-                                    max="5.0" 
-                                    step="0.1"
-                                    value={evolutionSettings.agingSpeed}
-                                    onChange={(e) => setEvolutionSettings(s => ({...s, agingSpeed: parseFloat(e.target.value)}))}
-                                    className="w-full accent-pink-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                                />
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="flex items-center gap-1"><Zap size={10}/> Mutation Rate</span>
-                                    <span className="text-yellow-300 font-mono">{(evolutionSettings.mutationRate * 100).toFixed(0)}%</span>
-                                </div>
-                                <input 
-                                    type="range" 
-                                    min="0" 
-                                    max="1.0" 
-                                    step="0.05"
-                                    value={evolutionSettings.mutationRate}
-                                    onChange={(e) => setEvolutionSettings(s => ({...s, mutationRate: parseFloat(e.target.value)}))}
-                                    className="w-full accent-yellow-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                                />
-                            </div>
-                            
-                            <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="flex items-center gap-1"><Sprout size={10}/> Food Abundance</span>
-                                    <span className="text-green-300 font-mono">{evolutionSettings.foodAbundance.toFixed(1)}x</span>
-                                </div>
-                                <input 
-                                    type="range" 
-                                    min="0.1" 
-                                    max="3.0" 
-                                    step="0.1"
-                                    value={evolutionSettings.foodAbundance}
-                                    onChange={(e) => setEvolutionSettings(s => ({...s, foodAbundance: parseFloat(e.target.value)}))}
-                                    className="w-full accent-green-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                                />
-                            </div>
-                        </div>
+                  {/* Classic Popover Mode */}
+                  {!dashboardMode && showSettings && (
+                    <div className="absolute top-16 right-0 pointer-events-auto z-30">
+                        <FlightPanel settings={simSettings} setSettings={setSimSettings} />
                     </div>
                   )}
-
-                  {/* Species Discovery Panel */}
-                  {showSpeciesPanel && (
-                      <div className="bg-black/60 backdrop-blur-md p-4 rounded-xl border border-blue-500/20 text-white/80 shadow-xl w-72 animate-fade-in-down">
-                           <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
-                                <TestTube size={14} className="text-blue-400"/> Species Discovery
-                           </h3>
-                           
-                           <div className="mb-5">
-                               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2 flex items-center gap-1">
-                                   <Globe size={10}/> Procedural Migration
-                               </div>
-                               <p className="text-xs text-gray-400 mb-2 leading-tight">
-                                   Simulate a flock of unknown species migrating into the region.
-                               </p>
-                               <button 
-                                   onClick={triggerMigration}
-                                   className="w-full py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
-                               >
-                                   <Wind size={14}/> Trigger Migration
-                               </button>
-                           </div>
-
-                           <div className="border-t border-white/10 pt-4">
-                               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-3 flex items-center gap-1">
-                                   <Settings2 size={10}/> Genetic Engineering
-                               </div>
-                               
-                               <div className="space-y-3">
-                                   <div className="flex items-center justify-between">
-                                       <span className="text-xs flex items-center gap-2"><Palette size={12}/> Plumage</span>
-                                       <div className="relative w-8 h-6 overflow-hidden rounded cursor-pointer ring-1 ring-white/20">
-                                           <input 
-                                                type="color" 
-                                                value={customSpecies.color}
-                                                onChange={(e) => setCustomSpecies(s => ({...s, color: e.target.value}))}
-                                                className="absolute -top-2 -left-2 w-16 h-16 cursor-pointer p-0 border-0"
-                                           />
-                                       </div>
-                                   </div>
-
-                                   <div>
-                                        <div className="flex justify-between text-xs mb-1">
-                                            <span>Body Scale</span>
-                                            <span className="font-mono text-white/60">{customSpecies.scale.toFixed(1)}x</span>
-                                        </div>
-                                        <input 
-                                            type="range" min="0.3" max="2.0" step="0.1"
-                                            value={customSpecies.scale}
-                                            onChange={(e) => setCustomSpecies(s => ({...s, scale: parseFloat(e.target.value)}))}
-                                            className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                                        />
-                                   </div>
-
-                                   <div>
-                                        <div className="flex justify-between text-xs mb-1">
-                                            <span className="flex items-center gap-1"><Signal size={10}/> Pitch</span>
-                                            <span className="font-mono text-white/60">{Math.round(customSpecies.pitch)}Hz</span>
-                                        </div>
-                                        <input 
-                                            type="range" min="200" max="1200" step="50"
-                                            value={customSpecies.pitch}
-                                            onChange={(e) => setCustomSpecies(s => ({...s, pitch: parseFloat(e.target.value)}))}
-                                            className="w-full accent-white h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                                        />
-                                        <div className="flex justify-between text-[9px] text-gray-500 mt-1 font-mono uppercase">
-                                            <span>Bass</span>
-                                            <span>Tenor</span>
-                                            <span>Soprano</span>
-                                        </div>
-                                   </div>
-                                   
-                                   <button 
-                                       onClick={introduceCustomSpecies}
-                                       className="w-full mt-2 py-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
-                                   >
-                                       <TestTube size={14}/> Synthesize & Release
-                                   </button>
-                               </div>
-                           </div>
-                      </div>
+                  {!dashboardMode && showEvolution && (
+                    <div className="absolute top-16 right-0 pointer-events-auto z-30">
+                        <EvolutionPanel settings={evolutionSettings} setSettings={setEvolutionSettings} stats={stats} onPopChange={handlePopulationChange} />
+                    </div>
+                  )}
+                  {!dashboardMode && showSpeciesPanel && (
+                    <div className="absolute top-16 right-0 pointer-events-auto z-30">
+                        <SpeciesPanel customSpecies={customSpecies} setCustomSpecies={setCustomSpecies} onMigrate={triggerMigration} onIntroduce={introduceCustomSpecies} />
+                    </div>
                   )}
                 </div>
             </div>
@@ -609,7 +679,7 @@ function App() {
                  </div>
             )}
 
-            <div className={`absolute top-4 right-4 bottom-4 w-80 transition-transform duration-500 ease-out z-20 pointer-events-none ${selectedBird ? 'translate-x-0' : 'translate-x-96'}`}>
+            <div className={`absolute top-4 right-4 bottom-4 w-80 transition-transform duration-500 ease-out z-40 pointer-events-none ${selectedBird ? 'translate-x-0' : 'translate-x-96'}`}>
                 <div className="h-full bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col pointer-events-auto">
                     
                     <div className="p-4 border-b border-white/10 flex justify-between items-center bg-slate-800/50">
