@@ -9,15 +9,16 @@ In other words, this is just a quick web app sandbox experiment using a nifty LL
 > [!CAUTION]
 > Again, **do not blindly trust please**
 
-1. Overall description: What this is ("Product" PoV)
+1. **Overall description**: What this is ("Product" PoV)
    - [DESCRIPTION](DESCRIPTION.md)
-2. Technical docs
+2. **Technical docs**
    - [ARCHITECTURE](ARCHITECTURE.md) (incl. overall overview as well as lower level tech design, give or take)
    - LLM agent should be kindly asked to write/expand tests of multiple kinds
      - incl. some or other sort of end-to-end *useful* test suite
      - and then one could proudly add a reference to that here
-3. Docs for LLM
+3. **Docs for LLM**
    - [CLAUDE.md](../CLAUDE.md) - wrote initial version myself, it includes notes about direction I want to go (I think) as well
+4. Possible **Roadmap** analysis / possible future areas to explore: [FUTURE_WORK](FUTURE_WORK.md)
 
 ## Related
 

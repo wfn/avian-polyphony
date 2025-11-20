@@ -1,14 +1,17 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { BirdData, BirdAnalysis } from "../types";
+import { generateBirdAnalysis } from "./birdNomenclature";
 
 // Assuming process.env.API_KEY is available
 const API_KEY = process.env.API_KEY || '';
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 export const analyzeBird = async (bird: BirdData): Promise<BirdAnalysis> => {
-  if (!API_KEY) {
-    throw new Error("API Key missing");
+  // Use local generation if API key is not available
+  if (!API_KEY || !ai) {
+    console.log("Gemini API key not found, using local procedural generation");
+    return generateBirdAnalysis(bird);
   }
 
   const prompt = `
@@ -48,11 +51,7 @@ export const analyzeBird = async (bird: BirdData): Promise<BirdAnalysis> => {
     throw new Error("No text response");
   } catch (error) {
     console.error("Gemini Analysis Error:", error);
-    return {
-        speciesName: "Unknown Specimen",
-        scientificName: "Avis Incognita",
-        description: "The observer was unable to classify this bird due to atmospheric interference.",
-        temperament: "Elusive"
-    };
+    console.log("Falling back to local procedural generation");
+    return generateBirdAnalysis(bird);
   }
 };

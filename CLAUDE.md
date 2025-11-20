@@ -29,11 +29,15 @@ Please:
 ## Deployment
  - for context, some time in the future I may want to deploy this to a VPS or some PaaS, so keep that in mind
  - but for now important thing is that it builds and runs locally
- - note: as an initially-google-ai-studio project, this app currently has one optional feature (bird info & description) which depends on LLM API (Gemini API in particular)
+ - note: as an initially-google-ai-studio project, this app has a bird species nomenclature feature that can optionally use Gemini API for LLM-generated descriptions
+   - **Local-first design**: The app now has a fully-functional local procedural nomenclature system that generates bird names and descriptions without any API dependencies
+   - When Gemini API key is available, it can optionally provide more creative/varied descriptions
+   - When API key is not available or API calls fail, the app seamlessly falls back to local generation
    - any current and future remote-llm-or-mcp-api-depending features (in fact anything with remote service as dependency) need to be optional and "fail gracefully"
      - rest of app needs to work without them (e.g. if Gemini API key is not even defined, this should not cause any issues)
      - UI and UX wise, those optional features need to behave in robust and non-UX-breaking ways
      - ideally, all such features should have local equivalents (another local service as dependency (if at some point this makes sense) is OK as well (but only if necessary!), just needs to work seamlessly, deployment needs to be tested out and documented)
+   - ✅ **Current status**: Bird nomenclature feature fully functional offline with local generation
  - quick note to Claude and myself: I should refine overall vision and further-ahead expectations / direction of this project (and perhaps move some of these notes to a separate doc or at least section), but you get the initial idea; aesthetics but also (ideally eventually) properlly scientific-method-aspiring modeling tools/sandbox in one; with quick feedback loop; and build on that and see where it takes us; IDEAS AND CREATIVITY IS HIGHLY APPRECIATED and welcomed!!!)
 
 ## Anything else

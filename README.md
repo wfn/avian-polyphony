@@ -3,9 +3,7 @@
 ## Quick intro
 
 > [!TIP]
-> See:
-
-[README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
+> See: [README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md); [possible roadmap analysis / future directions](./docs/FUTURE_WORK.md)
 
 ### Cute ridiculous bird "ecology" sandbox.
 
@@ -31,7 +29,8 @@ See [`docs` directory](./docs/)
 
 <p align="center">
   <img src="./docs/img/9_full-dashboard-sans-bird-description.png" width="768">
-  <img src="./docs/img/8_full-dashboard-sans-bird-description.png" width="256">
+  <img src="./docs/img/10_larger-flock.png" width="256">
+  <img src="./docs/img/11_locally-running-nomenclature-system.png" width="256">
   <img src="./docs/img/1_birb-evotest-2.png" width="256">
   <img src="./docs/img/2_birb-evotest-3.png" width="256">
   <img src="./docs/img/3_birb-evotest-4.png" width="256">
@@ -39,11 +38,12 @@ See [`docs` directory](./docs/)
   <img src="./docs/img/5_birb-questionable-traits-query-from-api-1.png" width="256">
   <img src="./docs/img/6_new-species-test-1.png" width="256">
   <img src="./docs/img/7_pop-dynamics-charts-1.png" width="256">
+  <img src="./docs/img/8_full-dashboard-sans-bird-description.png" width="256">
 </p>
 
 # Run and deploy your AI Studio app
 
-This was (at least initially) created and is (as of now) prototyped in AI Studio, so you should be able to import this thing there. Or ping me so I can share that Drive URL linking to Studio project to you / so you can make a copy to your Drive. I've just started poking on AI Studio myself though. If I continue poking around, I may deploy locally. In that case I will review the below and update/expand as necessary. But right now this is just a quick PoC draft.
+This was initially created and initially prototyped in AI Studio (Gemini 3 test), and is (as of now) further developed / prototyped / explored through local dev + Claude Code. If you want AI Studio, you should still be able to import this thing there. Or ping me so I can share that Drive URL linking to Studio project to you / so you can make a copy to your Drive. I've just started poking on AI Studio myself though. But as I continued poking around, I ended up moving to local deployments. The below is reviewed and up to date. Either way however: **right now this is still just a quick PoC draft.**
 
 ## Run Locally
 
@@ -52,8 +52,9 @@ This was (at least initially) created and is (as of now) prototyped in AI Studio
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-   - **NOTE from human**: only the "get bird name and description" feature/aspect should depend on this, everything else *should* be generated locally, procedurally
-     - Obviously this particular feature/aspect can also be made to work through local simple procedural means. (Or, well, vice versa, more (maybe even nifty) LLM-live-fetched-and-rendered stuff could be added. But I personally would like this PoC to ideally depend on LLM API only for optional features (which don't stop app functioning properly when off and/or when not able to call this API. This later local-only robust functionality requires app changes, however. But should be easy to do.)
-4. Run the app:
+2. **(Optional)** Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+   - **The app works fully without an API key** - bird names and descriptions are generated locally using procedural generation
+   - With an API key, you can optionally use LLM-generated descriptions as an alternative to local generation
+   - All features function properly whether or not the API key is present
+3. Run the app:
    `npm run dev`
