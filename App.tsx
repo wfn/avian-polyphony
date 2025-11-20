@@ -3,7 +3,8 @@ import React, { useState, useCallback, useRef } from 'react';
 import { World } from './components/World';
 import { audioEngine } from './services/audioEngine';
 import { analyzeBird } from './services/geminiService';
-import { BirdData, BirdAnalysis, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand } from './types';
+import { PopulationChart } from './components/PopulationChart';
+import { BirdData, BirdAnalysis, BirdActionType, ViewMode, SimSettings, SimulationStats, EvolutionSettings, WorldCommand, HistoryPoint } from './types';
 import { Volume2, VolumeX, Info, X, Music, Bird as BirdIcon, Sparkles, Cookie, Megaphone, Eye, Globe, Video, Shuffle, SlidersHorizontal, Wind, Play, Pause, Activity, Users, Mic, Mountain, Dna, Zap, Timer, Sprout, Plus, Minus, TestTube, Settings2, Palette, Signal } from 'lucide-react';
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
   const [worldCommand, setWorldCommand] = useState<WorldCommand>(null);
   const [isPaused, setIsPaused] = useState(false);
   
-  // Stats State
+  // Stats & History State
   const [stats, setStats] = useState<SimulationStats>({ 
     population: 0, 
     flockCount: 0, 
@@ -52,6 +53,7 @@ function App() {
     maxGeneration: 0,
     avgEnergy: 0
   });
+  const [history, setHistory] = useState<HistoryPoint[]>([]);
   
   const birdRegistry = useRef<Record<string, BirdAnalysis>>({});
   const [actionSignal, setActionSignal] = useState<{id: string, type: BirdActionType, time: number} | null>(null);
@@ -61,6 +63,25 @@ function App() {
     setAudioEnabled(true);
     setHasStarted(true);
   };
+
+  const handleStatsUpdate = useCallback((newStats: SimulationStats) => {
+      setStats(newStats);
+      setHistory(prev => {
+          const newPoint: HistoryPoint = {
+              timestamp: Date.now(),
+              population: newStats.population,
+              voices: newStats.activeVoices,
+              foraging: newStats.foragingCount,
+              avgEnergy: newStats.avgEnergy
+          };
+          // Keep approximately 60 seconds of history (assuming 0.5s update rate -> 120 points)
+          const newHistory = [...prev, newPoint];
+          if (newHistory.length > 120) {
+              newHistory.shift();
+          }
+          return newHistory;
+      });
+  }, []);
 
   const handleBirdSelect = useCallback(async (bird: BirdData) => {
     setSelectedBird(bird);
@@ -165,7 +186,7 @@ function App() {
             simSettings={simSettings}
             evolutionSettings={evolutionSettings}
             isPaused={isPaused}
-            onStatsUpdate={setStats}
+            onStatsUpdate={handleStatsUpdate}
             worldCommand={worldCommand}
         />
       </div>
@@ -525,7 +546,10 @@ function App() {
             </div>
             
             {/* Stats Panel */}
-            <div className="absolute bottom-8 left-4 pointer-events-none z-10">
+            <div className="absolute bottom-8 left-4 pointer-events-none z-10 flex flex-col gap-4">
+               {/* History Chart */}
+               <PopulationChart data={history} />
+
                <div className="bg-black/30 backdrop-blur-md rounded-xl border border-white/10 p-4 text-white/80 shadow-xl pointer-events-auto w-64">
                   <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2 border-b border-white/10 pb-2">
                      <Activity size={14} className="text-green-400" /> Live Telemetry

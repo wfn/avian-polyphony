@@ -60,6 +60,14 @@ export interface SimulationStats {
   avgEnergy: number;
 }
 
+export interface HistoryPoint {
+  timestamp: number; // Relative time or Date.now()
+  population: number;
+  voices: number;
+  foraging: number;
+  avgEnergy: number;
+}
+
 export interface BirdData {
   id: string;
   position: [number, number, number];
