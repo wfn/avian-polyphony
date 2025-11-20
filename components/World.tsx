@@ -186,9 +186,12 @@ const SceneContent: React.FC<WorldProps> = ({
         };
     };
 
-    // Initialize Fog and Initial Flock
+    // Initialize Fog, Lighting, and Initial Flock
     useEffect(() => {
-        scene.fog = new THREE.FogExp2('#e0f2fe', 0.015);
+        // Dynamic Fog based on render distance
+        // Visbility approx 3/density.
+        const density = 3.0 / simSettings.renderDistance;
+        scene.fog = new THREE.FogExp2('#e0f2fe', density);
         
         // Initial spawn
         if (flockRef.current.length === 0) {
@@ -199,7 +202,7 @@ const SceneContent: React.FC<WorldProps> = ({
             flockRef.current = initialBirds;
             setFlockState(initialBirds);
         }
-    }, [scene]);
+    }, [scene, simSettings.renderDistance]);
 
     // Generate Trees (Memoized)
     const trees = useMemo(() => {
@@ -341,13 +344,13 @@ const SceneContent: React.FC<WorldProps> = ({
                 castShadow 
                 shadow-mapSize={[2048, 2048]}
             >
-                <orthographicCamera attach="shadow-camera" args={[-50, 50, 50, -50]} />
+                <orthographicCamera attach="shadow-camera" args={[-100, 100, 100, -100]} />
             </directionalLight>
             
             <Sky sunPosition={[100, 40, 100]} turbidity={0.3} rayleigh={0.8} mieCoefficient={0.005} mieDirectionalG={0.8} />
             
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow>
-                <planeGeometry args={[WORLD_SIZE * 2, WORLD_SIZE * 2]} />
+                <planeGeometry args={[WORLD_SIZE * 4, WORLD_SIZE * 4]} />
                 <meshStandardMaterial color="#66BB6A" roughness={1} />
             </mesh>
             
@@ -371,7 +374,7 @@ const SceneContent: React.FC<WorldProps> = ({
                 <OrbitControls 
                     maxPolarAngle={Math.PI / 2 - 0.1} 
                     minDistance={5}
-                    maxDistance={80}
+                    maxDistance={simSettings.renderDistance * 0.8}
                     enablePan={true}
                 />
             )}
@@ -384,7 +387,7 @@ const SceneContent: React.FC<WorldProps> = ({
 
 export const World: React.FC<WorldProps> = (props) => {
   return (
-    <Canvas shadows camera={{ position: [25, 15, 25], fov: 45 }}>
+    <Canvas shadows camera={{ position: [25, 15, 25], fov: 45, far: 1000 }}>
       <SceneContent {...props} />
     </Canvas>
   );

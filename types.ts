@@ -26,6 +26,7 @@ export enum ViewMode {
 export interface SimSettings {
   speed: number;
   agility: number;
+  renderDistance: number;
 }
 
 export interface EvolutionSettings {

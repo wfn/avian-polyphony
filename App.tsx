@@ -16,7 +16,11 @@ function App() {
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.ORBIT);
   const [showSettings, setShowSettings] = useState(false);
   const [showEvolution, setShowEvolution] = useState(false);
-  const [simSettings, setSimSettings] = useState<SimSettings>({ speed: 1, agility: 1 });
+  const [simSettings, setSimSettings] = useState<SimSettings>({ 
+      speed: 1, 
+      agility: 1,
+      renderDistance: 150 
+  });
   const [evolutionSettings, setEvolutionSettings] = useState<EvolutionSettings>({ 
       enabled: false, 
       agingSpeed: 1.0, 
@@ -266,7 +270,7 @@ function App() {
                             />
                         </div>
 
-                        <div>
+                        <div className="mb-4">
                             <div className="flex justify-between text-xs mb-1">
                                 <span>Agility</span>
                                 <span className="text-blue-400 font-mono">{simSettings.agility.toFixed(2)}x</span>
@@ -279,6 +283,22 @@ function App() {
                                 value={simSettings.agility}
                                 onChange={(e) => setSimSettings(s => ({...s, agility: parseFloat(e.target.value)}))}
                                 className="w-full accent-blue-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                            />
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between text-xs mb-1">
+                                <span>Visibility</span>
+                                <span className="text-purple-400 font-mono">{simSettings.renderDistance.toFixed(0)}m</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                min="50" 
+                                max="500" 
+                                step="10"
+                                value={simSettings.renderDistance}
+                                onChange={(e) => setSimSettings(s => ({...s, renderDistance: parseFloat(e.target.value)}))}
+                                className="w-full accent-purple-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
                             />
                         </div>
                     </div>

@@ -1,9 +1,9 @@
 
 import { BirdCallType } from "./types";
 
-export const WORLD_SIZE = 100;
-export const BIRD_COUNT = 25;
-export const TREE_COUNT = 60; // Increased for lushness
+export const WORLD_SIZE = 250; // Increased for larger exploration area
+export const BIRD_COUNT = 40; // Increased population
+export const TREE_COUNT = 150; // Increased density
 
 export const BIRD_COLORS = [
   '#FF6B6B', // Red
