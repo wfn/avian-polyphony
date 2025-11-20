@@ -33,6 +33,7 @@ The user can observe or intervene:
     *   *Orbit:* Rotate around the forest.
     *   *First Person:* Walk through the simulation on the ground.
     *   *Follow:* Lock onto a specific bird and track its flight.
+*   **Dashboard Mode:** A comprehensive overlay that displays all simulation parameters (Flight, Evolution, Species) simultaneously in a sidebar for advanced control.
 *   **Interventions:**
     *   *Feed:* Scatter food to attract birds to the ground.
     *   *Distract:* Trigger a scare event to scatter the flock.
@@ -51,4 +52,6 @@ The user can observe or intervene:
 
 ### Visual Language
 *   **Rings:** Visual rings expand from birds when they sing. The color indicates the type of call (Cyan for Social, Pink for Mating, Red for Territorial).
+*   **Trails:** Birds leave a fading trail behind them. The thickness of the trail corresponds to the bird's current energy level.
+*   **Flocking Network:** An optional visualization that draws lines between birds within perception range, revealing the underlying Boids neighbor graph.
 *   **Color & Opacity:** Older birds become slightly transparent.

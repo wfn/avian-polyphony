@@ -24,6 +24,68 @@ interface WorldProps {
   worldCommand: WorldCommand;
 }
 
+// Performant component to draw lines between flocking neighbors
+const FlockVisualizer: React.FC<{ flockRef: React.MutableRefObject<BirdData[]> }> = ({ flockRef }) => {
+  const lineRef = useRef<THREE.LineSegments>(null);
+  // Estimated max connections: 200 birds * 20 neighbors = 4000 lines * 2 points = 8000 points
+  // Allocating a safe buffer size
+  const maxPoints = 8000; 
+  const positions = useMemo(() => new Float32Array(maxPoints * 3), []);
+
+  useFrame(() => {
+    if (!lineRef.current) return;
+    
+    const birds = flockRef.current;
+    let vertexIndex = 0;
+    const perceptionSq = PERCEPTION_RADIUS * PERCEPTION_RADIUS;
+
+    for (let i = 0; i < birds.length; i++) {
+      const b1 = birds[i];
+      
+      // Optimization: We only check j > i to avoid double-drawing lines and redundant checks
+      for (let j = i + 1; j < birds.length; j++) {
+        const b2 = birds[j];
+        
+        const dx = b1.position[0] - b2.position[0];
+        const dy = b1.position[1] - b2.position[1];
+        const dz = b1.position[2] - b2.position[2];
+        
+        const distSq = dx*dx + dy*dy + dz*dz;
+        
+        if (distSq < perceptionSq) {
+           if (vertexIndex + 6 > maxPoints * 3) break;
+
+           positions[vertexIndex++] = b1.position[0];
+           positions[vertexIndex++] = b1.position[1];
+           positions[vertexIndex++] = b1.position[2];
+
+           positions[vertexIndex++] = b2.position[0];
+           positions[vertexIndex++] = b2.position[1];
+           positions[vertexIndex++] = b2.position[2];
+        }
+      }
+    }
+    
+    // Update only the range of lines we are using this frame
+    lineRef.current.geometry.setDrawRange(0, vertexIndex / 3);
+    lineRef.current.geometry.attributes.position.needsUpdate = true;
+  });
+
+  return (
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <lineBasicMaterial color="#ffffff" transparent opacity={0.15} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </lineSegments>
+  );
+};
+
 // Component to handle camera following logic
 const CameraController: React.FC<{ 
   viewMode: ViewMode; 
@@ -382,6 +444,8 @@ const SceneContent: React.FC<WorldProps> = ({
             </mesh>
             
             {trees.map(tree => <Tree key={tree.id} data={tree} />)}
+
+            {simSettings.showFlocking && <FlockVisualizer flockRef={flockRef} />}
 
             {flockState.map((bird) => (
                 <Bird 

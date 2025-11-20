@@ -26,7 +26,11 @@ See [`docs` directory](./docs/)
 
 # Screenshots
 
+> [!TIP]
+> In UI, click on Dashboard icon to expand most UI widgets and see most features (save for individual bird info description; unless I forgot something which is possible): ![Dashboard icon](./docs/img/dashboard-icon.png). First screenshot has Dashboard enabled. Also, try increasing Flight parameters -> Visibility.
+
 <p align="center">
+  <img src="./docs/img/8_full-dashboard-sans-bird-description.png" width="768">
   <img src="./docs/img/1_birb-evotest-2.png" width="256">
   <img src="./docs/img/2_birb-evotest-3.png" width="256">
   <img src="./docs/img/3_birb-evotest-4.png" width="256">

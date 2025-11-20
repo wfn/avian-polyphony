@@ -2,8 +2,9 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Vector3, Group } from 'three';
+import { Trail } from '@react-three/drei';
 import { BirdData, BirdState, BirdCallType, BirdActionType, SimSettings } from '../types';
-import { BIRD_SPEED, PERCEPTION_RADIUS, SEPARATION_DISTANCE, WORLD_SIZE, CALL_PROPERTIES, MATURATION_AGE } from '../constants';
+import { BIRD_SPEED, PERCEPTION_RADIUS, SEPARATION_DISTANCE, WORLD_SIZE, CALL_PROPERTIES, MATURATION_AGE, MAX_ENERGY } from '../constants';
 import { audioEngine } from '../services/audioEngine';
 
 interface BirdProps {
@@ -305,33 +306,44 @@ export const Bird: React.FC<BirdProps> = ({ data, flock, onSelect, isSelected, s
   const visualColor = data.color;
   const finalOpacity = data.age > data.maxAge * 0.9 ? 0.6 : 1.0;
 
+  // Calculate trail width based on energy (high energy = thicker trail)
+  // Cap width at reasonable size
+  const trailWidth = 0.3 * (data.energy / MAX_ENERGY);
+
   return (
     <group>
-      {/* The Bird Mesh */}
-      <group 
-        ref={groupRef} 
-        position={new Vector3(...data.position)} 
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(data);
-        }}
+      <Trail
+         width={trailWidth}
+         length={6}
+         color={visualColor}
+         attenuation={(t) => t}
       >
-        <mesh castShadow receiveShadow rotation={[0, 0, Math.PI / 2]}>
-          <coneGeometry args={[0.3, 1, 8]} />
-          <meshStandardMaterial 
-            color={isSelected ? '#ffffff' : visualColor} 
-            emissive={isSelected ? '#555555' : (data.energy < 20 ? '#330000' : '#000000')} 
-            transparent
-            opacity={finalOpacity}
-          />
-        </mesh>
-        
-        {/* Wings */}
-        <mesh position={[0, 0, 0.2]} rotation={[0.5, 0, 0]}>
-           <boxGeometry args={[0.8, 0.1, 0.3]} />
-           <meshStandardMaterial color={visualColor} transparent opacity={finalOpacity} />
-        </mesh>
-      </group>
+          {/* The Bird Mesh */}
+          <group 
+            ref={groupRef} 
+            position={new Vector3(...data.position)} 
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(data);
+            }}
+          >
+            <mesh castShadow receiveShadow rotation={[0, 0, Math.PI / 2]}>
+              <coneGeometry args={[0.3, 1, 8]} />
+              <meshStandardMaterial 
+                color={isSelected ? '#ffffff' : visualColor} 
+                emissive={isSelected ? '#555555' : (data.energy < 20 ? '#330000' : '#000000')} 
+                transparent
+                opacity={finalOpacity}
+              />
+            </mesh>
+            
+            {/* Wings */}
+            <mesh position={[0, 0, 0.2]} rotation={[0.5, 0, 0]}>
+               <boxGeometry args={[0.8, 0.1, 0.3]} />
+               <meshStandardMaterial color={visualColor} transparent opacity={finalOpacity} />
+            </mesh>
+          </group>
+      </Trail>
 
       {/* Visual Sound Propagation */}
       {chirpVisual > 0 && groupRef.current && (
