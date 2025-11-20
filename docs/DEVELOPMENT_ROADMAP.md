@@ -166,7 +166,7 @@ gantt
     dateFormat YYYY-MM-DD
 
     section Foundation
-    Testing Infrastructure           :crit, phase1, 2024-11-20, 2w
+    Testing Infrastructure           :crit, phase1, 2025-11-20, 2w
     Genotype Framework               :crit, phase2, after phase1, 3w
     Behavior Tree System             :crit, phase3, after phase2, 3w
 

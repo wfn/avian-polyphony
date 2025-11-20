@@ -10,7 +10,7 @@ Experimental 3d web app sandbox (runs as Single Page Application) to play around
 
 **Context:** You're being asked to work on features from `docs/FUTURE_WORK.md`. This section helps you quickly understand the project state and effective development patterns.
 
-### Current Project State (As of Nov 2024)
+### Current Project State (As of Nov 2025)
 
 **What Works Now:**
 - ✅ **Core simulation**: Boids flocking (separation/alignment/cohesion), lifecycle (birth/death), energy metabolism

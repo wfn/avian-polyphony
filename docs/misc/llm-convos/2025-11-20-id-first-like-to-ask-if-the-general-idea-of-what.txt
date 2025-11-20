@@ -2300,7 +2300,7 @@ If the task is unclear, let me know.
            + understand the project state and effective development 
            + patterns.
         12 +  
-        13 +  ### Current Project State (As of Nov 2024)
+        13 +  ### Current Project State (As of Nov 2025)
         14 +  
         15 +  **What Works Now:**
         16 +  - ✅ **Core simulation**: Boids flocking 
