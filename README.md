@@ -5,9 +5,11 @@
 > [!TIP]
 > See:
 
-[DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
+[README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
 
 ### Cute ridiculous bird "ecology" sandbox.
+
+A quick experiment using `gemini-3-pro-preview` in AI Studio. **Ridiculous but nifty low poly birb ecology / vibe sandbox**
 
 Project can be maybe possibly used to further prototype ideas atop this as well as use as basis for exploring some half-simulation-half-flaky-aesthetics sandbox concepts; maybe.
 
