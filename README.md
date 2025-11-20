@@ -24,13 +24,19 @@ See [`docs` directory](./docs/)
 
 # Screenshots
 
-adding resized images with relative paths here via separate commit made note through terminal i think
+<p align="center">
+  <img src="./docs/img/1_birb-evotest-2.png" width="256">
+  <img src="./docs/img/2_birb-evotest-3.png" width="256">
+  <img src="./docs/img/3_birb-evotest-4.png" width="256">
+  <img src="./docs/img/4_birb-evotest-6.png" width="256">
+  <img src="./docs/img/5_birb-questionable-traits-query-from-api-1.png" width="256">
+  <img src="./docs/img/6_new-species-test-1.png" width="256">
+  <img src="./docs/img/7_pop-dynamics-charts-1.png" width="256">
+</p>
 
 # Run and deploy your AI Studio app
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1N2XGK4Nb8XgQgT9mThUbf5t6_uanFGby
+This was (at least initially) created and is (as of now) prototyped in AI Studio, so you should be able to import this thing there. Or ping me so I can share that Drive URL linking to Studio project to you / so you can make a copy to your Drive. I've just started poking on AI Studio myself though. If I continue poking around, I may deploy locally. In that case I will review the below and update/expand as necessary. But right now this is just a quick PoC draft.
 
 ## Run Locally
 
@@ -40,5 +46,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1N2XGK4Nb8XgQgT9mThUbf5
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+   - **NOTE from human**: only the "get bird name and description" feature/aspect should depend on this, everything else *should* be generated locally, procedurally
+     - Obviously this particular feature/aspect can also be made to work through local simple procedural means. (Or, well, vice versa, more (maybe even nifty) LLM-live-fetched-and-rendered stuff could be added. But I personally would like this PoC to ideally depend on LLM API only for optional features (which don't stop app functioning properly when off and/or when not able to call this API. This later local-only robust functionality requires app changes, however. But should be easy to do.)
+4. Run the app:
    `npm run dev`
