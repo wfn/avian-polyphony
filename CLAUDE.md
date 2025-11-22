@@ -1,12 +1,26 @@
-# TL;DR
-
-Actionable guidance & focus for machines *and* humans: read through section [LLM Developer Briefing (Working with the Roadmap)](#llm-developer-briefing-working-with-the-roadmap). This is the most important section for loading up context quickly. As a side note, be aware that humans leading development make heavy use of (and attempt to maintain) [DEVELOPMENT_ROADMAP](./docs/DEVELOPMENT_ROADMAP.md). As either humans or machines, you are genuinely heavily encouraged to ask as many complex questions as necessary; express confusion; challenge ideas wherever that makes sense. End of TL;DR.
-
-# avian-polyphony instructions for Claude and similar LLM friends 
+# xenogenesis instructions for Claude and similar LLM friends
 
 ## About this project
 
-Experimental 3d web app sandbox (runs as Single Page Application) to play around with and explore bird (or later general) ecology, swarm, evolution ideas and expose various params / controls to user. Low poly 3d web app with procedural generation and (to use fancy terms) agent systems modeling. Started as Google AI Studio quick vibe coding experiment using the new `gemini-3-pro-preview`. App needs to be fully functional when run locally, and I want to be able to iteratively keep adding optional (on/off) composable features / components / dynamics. It needs to be aesthetically intuitively pleasing and self-contained, nice small piece of art (inspiration: Proteus video game). However, if user so chooses - user is given nuanced controls to finesse various aspects of dynamical systems, UI itself, etc.
+**xenogenesis** is a computational laboratory for exploring emergence and evolution across impossible substrates. It's a meta-framework containing multiple self-contained modules, each exploring different questions about what life could be if the rules were different.
+
+**Current structure:**
+- **`xenogenesis/`** (this repository) - Meta-project framework
+  - **`avian-polyphony/`** - Module 1: Bird-like flocking agents with genetic evolution, procedural audio, and species nomenclature
+  - **`docs/`** - Cross-module philosophy and roadmap
+  - Future modules will be added as siblings to avian-polyphony
+
+**Philosophy:** Inspired by Greg Egan's *Wang's Carpets*, we're building composable systems for exploring life-like emergence in substrates biology never tried—from flocking birds to high-dimensional alien cognition.
+
+### avian-polyphony (Module 1)
+
+Experimental 3D web app sandbox (runs as Single Page Application) exploring bird ecology, swarm dynamics, and evolution. Low poly 3D web app with procedural generation and agent systems modeling. Started as Google AI Studio quick vibe coding experiment using `gemini-3-pro-preview`.
+
+**Design goals:**
+- Fully functional when run locally
+- Iteratively add optional (on/off) composable features/components/dynamics
+- Aesthetically intuitive and self-contained (inspiration: Proteus video game)
+- User given nuanced controls to adjust dynamical systems, UI, etc.
 
 ---
 
@@ -64,7 +78,7 @@ World.tsx (source of truth)
 - **HTML rendering**: Bird descriptions use `dangerouslySetInnerHTML` for styled text (colored spans)
 - **TypeScript**: Strict types, all interfaces in `types.ts`
 
-### Working with `docs/FUTURE_WORK.md`
+### Working with `avian-polyphony/docs/FUTURE_WORK.md`
 
 **Structure:**
 - 11 major domains (Testing, UI, Graphics, Audio, Ecology, Behavior, Data, State, Games, Infrastructure, Other)
@@ -73,24 +87,25 @@ World.tsx (source of truth)
 
 **When User Requests Feature Development:**
 
-1. **Check roadmap first**: Reference `docs/FUTURE_WORK.md` section number
+1. **Check roadmap first**: Reference `avian-polyphony/docs/FUTURE_WORK.md` section number
 2. **Verify dependencies**: Does it need genotype system? Behavior trees? Testing infrastructure?
 3. **Propose implementation plan**:
    - Break into phases if complex
-   - Identify which files to modify (`components/`, `services/`, `types.ts`)
+   - Identify which files to modify (`avian-polyphony/components/`, `avian-polyphony/services/`, `avian-polyphony/types.ts`)
    - List tests to write (even if test infrastructure doesn't exist yet - note what SHOULD be tested)
    - Consider performance implications (Will this run 60 FPS for 100+ birds?)
 
 4. **Follow composability principle**:
    - New features MUST be toggle-able (on/off at runtime if possible)
    - Add UI controls in appropriate panel (Flight/Evolution/Species/Dashboard)
-   - Update `types.ts` with new settings interfaces
+   - Update `avian-polyphony/types.ts` with new settings interfaces
    - Preserve determinism if relevant (same seed → same outcome)
 
 5. **Update docs after implementation**:
-   - `docs/ARCHITECTURE.md` if architecture changed
-   - `docs/DESCRIPTION.md` if user-facing features added
-   - `docs/FUTURE_WORK.md` if implementation revealed new considerations
+   - `avian-polyphony/docs/ARCHITECTURE.md` if architecture changed
+   - `avian-polyphony/docs/DESCRIPTION.md` if user-facing features added
+   - `avian-polyphony/docs/FUTURE_WORK.md` if implementation revealed new considerations
+   - `docs/philosophy.md` if insights apply to meta-project vision
 
 **When User Requests Roadmap Discussion/Refinement:**
 
@@ -116,39 +131,46 @@ World.tsx (source of truth)
 
 **When Implementing Features:**
 - **Note what SHOULD be tested** even if tests aren't written yet
-- **Write pure, testable functions** when possible (see `birdNomenclature.ts` as example)
+- **Write pure, testable functions** when possible (see `avian-polyphony/services/birdNomenclature.ts` as example)
 - **Avoid side effects**: Separate computation from rendering/mutation
 
 **When User Asks for Tests (Section 1 of Roadmap):**
 - Start with **unit tests** for pure functions (nomenclature, color classification, boids math)
 - Then **integration tests** (service interactions)
 - Finally **E2E tests** with Playwright (user journeys)
-- Preserve existing inline test examples (e.g., `test-nomenclature.ts` pattern)
+- Tests should live in module directories (e.g., `avian-polyphony/tests/`)
 
 ### Key Files Reference
 
+**Meta-Project:**
+- `README.md` - xenogenesis vision and philosophy
+- `docs/philosophy.md` - Influences, computational substrates, Wang's Carpets
+- `CLAUDE.md` - This file (LLM developer briefing)
+
+**avian-polyphony Module:**
+
 **Core Simulation:**
-- `components/World.tsx` - Main simulation loop, evolution, population management
-- `components/Bird.tsx` - Individual bird agent (boids, state machine, audio triggers)
-- `types.ts` - All TypeScript interfaces and enums
-- `constants.ts` - Tunable parameters (speeds, colors, world size)
+- `avian-polyphony/components/World.tsx` - Main simulation loop, evolution, population management
+- `avian-polyphony/components/Bird.tsx` - Individual bird agent (boids, state machine, audio triggers)
+- `avian-polyphony/types.ts` - All TypeScript interfaces and enums
+- `avian-polyphony/constants.ts` - Tunable parameters (speeds, colors, world size)
 
 **Services:**
-- `services/birdNomenclature.ts` - Local species generation (highly deterministic)
-- `services/audioEngine.ts` - Tone.js wrapper (singleton pattern)
-- `services/geminiService.ts` - Optional LLM integration
+- `avian-polyphony/services/birdNomenclature.ts` - Local species generation (highly deterministic)
+- `avian-polyphony/services/audioEngine.ts` - Tone.js wrapper (singleton pattern)
+- `avian-polyphony/services/geminiService.ts` - Optional LLM integration
 
 **UI:**
-- `App.tsx` - UI orchestration, settings panels, dashboard mode
-- `components/PopulationChart.tsx` - SVG data visualization
+- `avian-polyphony/App.tsx` - UI orchestration, settings panels, dashboard mode
+- `avian-polyphony/components/PopulationChart.tsx` - SVG data visualization
 
 ### Development Workflow
 
 1. **Read relevant code first**: Use Read tool to understand existing patterns
 2. **Propose before implementing**: Outline plan for user approval
-3. **Test as you go**: Run `npm run dev`, check browser console for errors
+3. **Test as you go**: Run `cd avian-polyphony && npm run dev`, check browser console for errors
 4. **Commit often**: Use git for incremental progress
-5. **Update docs**: Keep ARCHITECTURE.md and DESCRIPTION.md in sync
+5. **Update docs**: Keep module docs (avian-polyphony/docs/) and meta docs (docs/) in sync
 
 ### Common Pitfalls to Avoid
 
@@ -181,39 +203,59 @@ Don't just implement - think, question, propose alternatives!
 
 ## Documentation
 
-"Product" point-of-view description as well as technical documentation is under directory `docs/`.
+**Meta-project documentation:**
+- `README.md` - xenogenesis vision, philosophy, current modules
+- `docs/philosophy.md` - Detailed influences, computational substrates, open questions
+- `docs/ROADMAP.md` - (Future) Cross-module development roadmap
+
+**avian-polyphony module documentation:**
+- `avian-polyphony/README.md` - Module-specific intro, screenshots, quick start
+- `avian-polyphony/docs/DESCRIPTION.md` - Product/feature description
+- `avian-polyphony/docs/ARCHITECTURE.md` - Technical architecture
+- `avian-polyphony/docs/FUTURE_WORK.md` - Comprehensive feature analysis (11 domains)
+- `avian-polyphony/docs/DEVELOPMENT_ROADMAP.md` - Visual guide with Mermaid diagrams
 
 Please:
  - refer to this documentation as needed
  - keep it up to date as well
+ - update meta docs when changes affect the overall framework
+ - update module docs when changes are module-specific
 
-## Build & Deploy locally
- - serve locally with: `npm run dev`
- - app should be reachable at http://localhost:3000/
- - local deployment needs to always work
- - my experience is as a backend developer, so recommend (and make decisions as needed) deployment/pipeline improvements when prudent
+## Build & Deploy locally (avian-polyphony)
+ - Navigate to module: `cd avian-polyphony`
+ - Serve locally: `npm run dev`
+ - App should be reachable at http://localhost:3000/
+ - Local deployment needs to always work
+ - My experience is as a backend developer, so recommend (and make decisions as needed) deployment/pipeline improvements when prudent
 
 ## Project Structure
- - again see `docs/ARCHITECTURE.md`, but also if you deem it prudent, refine and add notes here
- - in general, add notes to this file if this is deemed a good idea
+ - See `avian-polyphony/docs/ARCHITECTURE.md` for module architecture
+ - See `docs/philosophy.md` for meta-project philosophy
+ - If you deem it prudent, refine and add notes here or to appropriate docs
 
 ## Style Guidelines
  - as a developer I try my best to avoid too much frontend, so adopt whatever style you deem best, and be consistent above everything
  - update and add new Markdown docs when needed
 
-## Deployment
- - for context, some time in the future I may want to deploy this to a VPS or some PaaS, so keep that in mind
- - but for now important thing is that it builds and runs locally
- - note: as an initially-google-ai-studio project, this app has a bird species nomenclature feature that can optionally use Gemini API for LLM-generated descriptions
-   - **Local-first design**: The app now has a fully-functional local procedural nomenclature system that generates bird names and descriptions without any API dependencies
-   - When Gemini API key is available, it can optionally provide more creative/varied descriptions
-   - When API key is not available or API calls fail, the app seamlessly falls back to local generation
-   - any current and future remote-llm-or-mcp-api-depending features (in fact anything with remote service as dependency) need to be optional and "fail gracefully"
-     - rest of app needs to work without them (e.g. if Gemini API key is not even defined, this should not cause any issues)
-     - UI and UX wise, those optional features need to behave in robust and non-UX-breaking ways
-     - ideally, all such features should have local equivalents (another local service as dependency (if at some point this makes sense) is OK as well (but only if necessary!), just needs to work seamlessly, deployment needs to be tested out and documented)
-   - ✅ **Current status**: Bird nomenclature feature fully functional offline with local generation
- - quick note to Claude and myself: I should refine overall vision and further-ahead expectations / direction of this project (and perhaps move some of these notes to a separate doc or at least section), but you get the initial idea; aesthetics but also (ideally eventually) properlly scientific-method-aspiring modeling tools/sandbox in one; with quick feedback loop; and build on that and see where it takes us; IDEAS AND CREATIVITY IS HIGHLY APPRECIATED and welcomed!!!)
+## Deployment & External Dependencies
+
+**Meta-project principle:** All modules must be **local-first** and fully functional offline.
+
+**avian-polyphony specific:**
+ - Builds and runs locally: `cd avian-polyphony && npm run dev`
+ - **Zero required external dependencies**: Fully functional without API keys
+ - Has optional Gemini API integration for bird nomenclature (falls back to local generation)
+ - ✅ **Current status**: Bird nomenclature feature fully functional offline with local generation
+
+**General rules for all modules (current and future):**
+ - Any external API/service dependencies MUST be optional and "fail gracefully"
+ - Rest of module must work without them (e.g., if API key is not defined, this should not cause any issues)
+ - UI and UX must behave robustly when optional features are unavailable
+ - Ideally, all optional features should have local equivalents
+ - For future deployment to VPS or PaaS, keep this constraint in mind
+
+**Vision note:**
+The goal is a computational laboratory for exploring emergence and evolution across different substrates—aesthetics AND scientific-method-aspiring modeling tools in one, with rapid feedback loops. Each module explores different questions about what life could be. **IDEAS AND CREATIVITY ARE HIGHLY APPRECIATED AND WELCOMED!**
 
 ## Anything else
 
