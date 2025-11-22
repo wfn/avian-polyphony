@@ -1,71 +1,154 @@
-# avian-polyphony
+# xenogenesis
 
-<br>
-<p>
-  <sub>
-    <code>Genotype : &#9;&#9;Intension</code><br>
-    <code>&nbsp;&nbsp;↳ Phenotype :  Extension</code>
-  </sub>
-</p>
-<br>
+**Life, but not as we know it.**
 
-## Quick intro
+A composable framework for exploring emergence and evolution across impossible substrates—from flocking birds to high-dimensional alien cognition.
+
+---
 
 > [!TIP]
-> See: [README in `docs`](./docs/); full [DESCRIPTION](./docs/DESCRIPTION.md); technical: [ARCHITECTURE](./docs/ARCHITECTURE.md)
->
-> **Planning:** [Future Work Analysis](./docs/FUTURE_WORK.md) | [Visual Development Roadmap](./docs/DEVELOPMENT_ROADMAP.md)
-
-### Cute ridiculous bird "ecology" sandbox.
-
-A quick experiment using `gemini-3-pro-preview` in AI Studio. **Ridiculous but nifty low poly birb ecology / vibe sandbox**
-
-Project can be maybe possibly used to further prototype ideas atop this as well as use as basis for exploring some half-simulation-half-flaky-aesthetics sandbox concepts; maybe.
-
-Initial repo (apart these notices here and there) is output of `gemini-3-pro-preview` model in AI Studio and really is just my wanting to play around with it; with vibe coding. There, I said it.
-
-# Warning
-
-> [!CAUTION]
-> "is output of `gemini-3-pro-preview` model in AI Studio" is not an exaggeration. Use **CAUTION, COMMON SENSE and DO NOT TRUST** code or docs in `DESCRIPTION` and `ARCHITECTURE`.
-
-# Docs
-
-See [`docs` directory](./docs/)
-
-# Screenshots
-
-> [!TIP]
-> In UI, click on Dashboard icon to expand most UI widgets and see most features (save for individual bird info description; unless I forgot something which is possible): ![Dashboard icon](./docs/img/dashboard-icon.png). First screenshot has Dashboard enabled. Also, try increasing Flight parameters -> Visibility.
+> **TL;DR / Quick Start:** Want to see something concrete? Jump to **[avian-polyphony](./avian-polyphony/)** - a working simulation of evolutionary flocking birds with procedural audio, genetic evolution, and species nomenclature. [Full documentation here](./avian-polyphony/README.md).
 
 <p align="center">
-  <img src="./docs/img/9_full-dashboard-sans-bird-description.png" width="768">
-  <img src="./docs/img/10_larger-flock.png" width="256">
-  <img src="./docs/img/11_locally-running-nomenclature-system.png" width="256">
-  <img src="./docs/img/1_birb-evotest-2.png" width="256">
-  <img src="./docs/img/2_birb-evotest-3.png" width="256">
-  <img src="./docs/img/3_birb-evotest-4.png" width="256">
-  <img src="./docs/img/4_birb-evotest-6.png" width="256">
-  <img src="./docs/img/5_birb-questionable-traits-query-from-api-1.png" width="256">
-  <img src="./docs/img/6_new-species-test-1.png" width="256">
-  <img src="./docs/img/7_pop-dynamics-charts-1.png" width="256">
-  <img src="./docs/img/8_full-dashboard-sans-bird-description.png" width="256">
+  <img src="./avian-polyphony/docs/img/9_full-dashboard-sans-bird-description.png" width="600">
+  <br>
+  <sub><i>avian-polyphony: Exploring evolution through flocking agents with real-time population dynamics</i></sub>
 </p>
 
-# Run and deploy your AI Studio app
+<p align="center">
+  <img src="./avian-polyphony/docs/img/11_locally-running-nomenclature-system.png" width="380">
+  <img src="./avian-polyphony/docs/img/10_larger-flock.png" width="380">
+  <br>
+  <sub><i>Left: Deterministic species nomenclature system. Right: Flocking behaviors with spatial audio.</i></sub>
+</p>
 
-This was initially created and initially prototyped in AI Studio (Gemini 3 test), and is (as of now) further developed / prototyped / explored through local dev + Claude Code. If you want AI Studio, you should still be able to import this thing there. Or ping me so I can share that Drive URL linking to Studio project to you / so you can make a copy to your Drive. I've just started poking on AI Studio myself though. But as I continued poking around, I ended up moving to local deployments. The below is reviewed and up to date. Either way however: **right now this is still just a quick PoC draft.**
+---
 
-## Run Locally
+## What This Is
 
-**Prerequisites:**  Node.js
+**xenogenesis** is a computational laboratory for asking: *"What forms could life take if the rules were different?"*
 
+Not a simulator of Earth biology, but a framework for exploring the adjacent possible—systems that *could* exhibit life-like complexity, evolution, and emergence, but use different substrates, different genetics, different physics.
 
-1. Install dependencies:
-   `npm install`
-2. **(Optional)** Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-   - **The app works fully without an API key** - bird names and descriptions are generated locally using procedural generation
-   - With an API key, you can optionally use LLM-generated descriptions as an alternative to local generation
-   - All features function properly whether or not the API key is present
-3. Run the app:
-   `npm run dev`
+Inspired by Greg Egan's *Wang's Carpets* and the tradition of artificial life research, xenogenesis provides composable, toggle-able systems for building and studying:
+
+- **Evolutionary dynamics** with pluggable genetics models (Mendelian, Lamarckian, epigenetic, horizontal transfer)
+- **Emergent behaviors** via modular behavior trees and agent interactions
+- **Procedural ecosystems** that surprise even their designers
+- **Artistic + scientific exploration** of complexity and emergence
+
+Each module is a self-contained experiment. Each experiment explores a different question about what life could be.
+
+---
+
+## Current Modules
+
+### 🐦 [avian-polyphony](./avian-polyphony/) → [**Full README**](./avian-polyphony/README.md)
+**Exploring evolution through flocking agents**
+
+A 3D browser-based simulation of bird-like agents with:
+- Boids-based flocking (separation, alignment, cohesion)
+- Procedural vocalizations and spatial audio
+- Genetic evolution with mutation and inheritance
+- Deterministic species nomenclature (25 color families, Latin binomial names)
+- Real-time population dynamics and visualization
+
+**Status:** Active development
+**Documentation:** [README](./avian-polyphony/README.md) | [Architecture](./avian-polyphony/docs/ARCHITECTURE.md) | [Development Roadmap](./avian-polyphony/docs/DEVELOPMENT_ROADMAP.md)
+
+```bash
+cd avian-polyphony && npm install && npm run dev
+# Open http://localhost:3000
+```
+
+---
+
+## Philosophy
+
+> *"In the vast space of possible forms of life, Earth biology is a single point. What else is out there in that space? What could we create, given different rules?"*
+
+Traditional biology studies life *as it is*.
+Artificial life studies life *as it could be*.
+**xenogenesis studies life *as it never was*.**
+
+We're interested in:
+- **Computational substrates** that exhibit emergent complexity (cellular automata, agent systems, neural networks)
+- **Evolutionary dynamics** under different inheritance models
+- **Speculative ecology** where familiar concepts (predation, symbiosis, competition) play out in unfamiliar ways
+- **Generative art** where aesthetic beauty emerges from algorithmic rules
+- **Serious play** as a methodology for discovery
+
+This is science fiction made real—not as prediction, as *exploration*.
+
+[Read more: Philosophy and Influences](./docs/philosophy.md)
+
+---
+
+## Design Principles
+
+1. **Composability** - Systems are modular plugins, not monolithic simulations
+2. **Toggle-ability** - Every feature can be turned on/off to isolate effects
+3. **Determinism** - Same initial conditions → same outcomes (when desired)
+4. **Local-first** - No external dependencies, runs entirely in browser
+5. **Exploration over accuracy** - We're exploring possibility space, not replicating Earth
+6. **Beauty + Rigor** - Aesthetically pleasing AND scientifically grounded (*note*: grounded as in using instruments such as the scientific method as our basis (**form**); not "grounded" as in "based on our environment's set of established facts" (extant ~~**content**~~))
+
+---
+
+## Roadmap
+
+**xenogenesis** will grow through:
+
+1. **Deepening existing modules** (genotype/phenotype systems, behavior trees, sexual reproduction)
+2. **Adding new substrates** (cellular automata, neural swarms, chemical systems)
+3. **Cross-module learning** (behaviors evolved in one context, tested in another)
+4. **Emergent narratives** (tracking interesting dynamics, documenting discoveries)
+5. **Community experiments** (shareable configurations, reproducible findings)
+
+See: [Cross-Module Roadmap](./docs/ROADMAP.md) (future)
+
+---
+
+## Influences & Inspirations
+
+- **Greg Egan's *Wang's Carpets*** - High-dimensional alien life in polysaccharide substrates
+- **Christopher Langton's Artificial Life** - Life as a property of organization, not material
+- **Conway's Game of Life** - Complexity from simple rules
+- **Bret Victor's *Inventing on Principle*** - Immediate feedback for exploratory thinking
+- **Proteus (video game)** - Procedural beauty, contemplative interaction
+- **Karl Sims' Evolved Virtual Creatures** - Evolution of morphology and behavior
+- **Richard Dawkins' *The Blind Watchmaker*** - Biomorphs and evolutionary computation
+
+---
+
+## Contributing
+
+**xenogenesis** is an experimental research project. Contributions are welcome (genuinely desired), but expect:
+- Rapid iteration and breaking changes
+- Unconventional ideas and failed experiments
+- Code that prioritizes exploration over production polish
+
+If you want to:
+- **Propose a new module** - Open an issue describing the substrate/question
+- **Improve existing modules** - PRs welcome, follow existing patterns
+- **Report interesting emergent behaviors** - Document and share configurations
+- **Discuss philosophy** - Engage in issues/discussions
+
+---
+
+## License
+
+MIT - Build strange life, share what you find.
+
+---
+
+## Contact
+
+Kostas (*wfn*)
+Questions, collaborations, philosophical debates, rants on author's hubris: Contact: [homepage->footer](https://kfs.mkj.lt/#lastfooter) (phone/signal & email; see email notice at the bottom)
+
+---
+
+*The [Wang's Carpets](https://en.wikipedia.org/wiki/Wang_tile) drifted through the oceanic depths of Orpheus, filtering the heavy water for food, absorbing the dim violet light. They were not intelligent. They were barely even sentient. But the pattern of polysaccharides they embodied was a kind of two-dimensional hypergraph, endlessly constructing itself, endlessly complex.*
+
+— Greg Egan, *Wang's Carpets* ([short story](https://en.wikipedia.org/wiki/Wang%27s_Carpets); later became part of his novel [Diaspora](https://en.wikipedia.org/wiki/Diaspora_(novel)))
